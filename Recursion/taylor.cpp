@@ -23,10 +23,20 @@ double e(int x, int n) {
     }
 }
 
+//Efficient method with reduced multiplications - Horner's rule
+double e1(int x, int n) {
+    static double S = 1;
+    if (n == 0)
+        return S;
+    
+    S = 1 + (double) x / n * S;
+    return e1(x, n-1); 
+}
+
 int main() 
 {
 
     cout << e(1, 15) << "\n";
-
+    cout << e1(1, 15) << "\n";
     return 0; 
 }

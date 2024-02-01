@@ -1,0 +1,50 @@
+/**
+ * Print All subsequences whose sum is K. 
+ * 
+ * For ex: arr = [1, 2, 1], K = 2
+ *   
+ *  Time complexity: O(2^n) as atmost for every place we have 2 options (either pick or not pick the current element)
+ *  Aux space: O(n) as there will be atmost n recursive calls in recursive stack.
+*/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+
+void printVector(vector<int> v) {
+    //This function prints the vector elements
+    for (int i = 0; i < v.size(); i++)
+        cout << v[i] << " "; 
+    cout << endl; 
+}
+
+void printSubsequencesWhoseSumisK(int ind, int sum, int k, int n, int arr[], vector<int> &ds) {
+    //Base case
+    if (ind == n) {
+        if (sum == k)
+            printVector(ds);
+        return;
+    }
+
+    //take or pick the current element
+    ds.push_back(arr[ind]);
+    sum += arr[ind];
+    printSubsequencesWhoseSumisK(ind + 1, sum, k, n, arr, ds); 
+    ds.pop_back(); 
+    sum -= arr[ind];
+    printSubsequencesWhoseSumisK(ind + 1, sum, k, n, arr, ds); // not pick the current element
+
+}
+
+int main()
+{
+
+    int arr[] = {1, 2, 1}; 
+    int n = 3; 
+    int k = 2;
+    vector<int> ds; 
+    printSubsequencesWhoseSumisK(0, 0, k, n, arr, ds);
+
+    return 0; 
+}

@@ -86,7 +86,7 @@ int main() {
     head -> next = new Node(4);
     head -> next -> next = new Node(7);
     head -> next -> next -> next = new Node(9);
-    int data = 0;
+    int data = 6;
     cout << "Original list: \n";
     printList(head);
     head = sortedInsert(head, data);

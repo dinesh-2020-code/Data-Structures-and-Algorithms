@@ -71,12 +71,12 @@ Node *sortedInsert(Node* head, int data)
 
 void printList(struct Node *temp) 
 {
+    Node *head = temp;
 
-    while (temp != NULL)
-    {
-        cout << temp -> data << " ";
+    do {
+        cout << temp -> data << "\t";
         temp = temp -> next;
-    }
+    }while (temp != head);
     cout << "\n";
 }
 
@@ -86,7 +86,8 @@ int main() {
     head -> next = new Node(4);
     head -> next -> next = new Node(7);
     head -> next -> next -> next = new Node(9);
-    int data = 6;
+    head -> next -> next -> next -> next = head;
+    int data = 0;
     cout << "Original list: \n";
     printList(head);
     head = sortedInsert(head, data);

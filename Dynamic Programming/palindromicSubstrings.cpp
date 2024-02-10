@@ -32,18 +32,11 @@ int countSubstrings(string s) {
             if (gap == 0) { // single character substring i.e., start and end point to same char
                 dp[i][j] = true;
             }
-            else if (gap == 1) { // string consists of two characters
-                if (s[i] == s[j]) 
-                    dp[i][j] = true;
-                else 
-                    dp[i][j] = false;
-            }
-            else { // for strings more than two chars, extreme chars must be same and string between extreme chars must be a palindrome.
+            else if (gap == 1 && s[i] == s[j]) // string consists of two characters
+                dp[i][j] = true;
+            else  // for strings more than two chars, extreme chars must be same and string between extreme chars must be a palindrome.
                 if (s[i] == s[j] && dp[i + 1][j - 1] == true) 
                     dp[i][j] = true;
-                else 
-                    dp[i][j] = false;
-            }
 
             if (dp[i][j] == true) 
                 ans++;

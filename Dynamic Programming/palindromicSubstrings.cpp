@@ -23,11 +23,9 @@ using namespace std;
 
 int countSubstrings(string s) {
     // DP solution
-    cout << "Fuc called\n";
     int n = s.length();
     int ans = 0;
-    vector < vector<bool> > dp;
-    
+    vector<vector<bool> > dp (n, vector<bool> (n, false));
     int gap = 0; // difference of start and end i.e., gap = end - start
     for (gap = 0; gap < n; gap++) {
         for (int i = 0, j = gap; j < n; j++, i++) {
@@ -51,7 +49,6 @@ int countSubstrings(string s) {
                 ans++;
         }
     }
-    cout << ans << endl; 
     return ans; 
 }
 

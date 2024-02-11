@@ -80,6 +80,35 @@ bool isSafe(int row, int col, vector<string> &board, int n) {
 }
 
 
+bool isSafe2(int row, int col, vector<string> &board, int n) {
+    // ponder you have to check for the queen in only 3 directions i.e., 
+    // towards left, upper diagonal and lower diagonal of a cell
+    // because there's no queen yet placed on the right side of the cell.
+
+    int r = row, c = col;
+    // check towards left of [row][col]
+    while (c >= 0) {
+        if (board[r][c] == 'Q')
+            return false;
+        c--;
+    }
+    // check upper-left diagonal
+    r = row; c = col;
+    while (r >= 0 && c >= 0) {
+        if (board[r][c] == 'Q')
+            return false;
+        r--; c--;
+    }
+    // check lower-left diagonal
+    r = row; c = col;
+    while (r < n && c >= 0) {
+        if (board[r][c] == 'Q')
+            return false;
+        r++; c--;
+    }
+    return true;
+}
+
 void solve(int col, int n, vector<string> &board) {
     //Base case
     if (col == n) {
@@ -94,7 +123,7 @@ void solve(int col, int n, vector<string> &board) {
     // Check for each col whether the queen be placed in specific column col or not
     for (int row = 0; row < n; ++row) {
         //check if it is safe to place the queen
-        if (isSafe(row, col, board, n)) {
+        if (isSafe2(row, col, board, n)) {
             board[row][col] = 'Q'; // if safe then place the queen
             solve(col + 1, n, board);
             board[row][col] = '.'; // remove the queen placed while backtracking

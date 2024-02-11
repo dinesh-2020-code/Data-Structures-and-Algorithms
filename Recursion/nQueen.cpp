@@ -132,6 +132,32 @@ void solve(int col, int n, vector<string> &board) {
 }
 
 
+void solve2(int col, int n, vector<string> &board, vector<int> &leftRow, vector<int> &upperDiagonal, vector<int> &lowerDiagonal) {
+    //Base case
+    if (col == n) {
+        //prints the board.
+        for (auto it : board) {
+            cout << it << endl;
+        }
+        cout << "============\n";
+        return;
+    }
+    // Check for each col whether the queen be placed in specific column col or not
+    for (int row = 0; row < n; ++row) {
+        if (leftRow[row] == 0 && upperDiagonal[(n - 1) + (col - row)] == 0 && lowerDiagonal[row + col] == 0) {
+            board[row][col] = 'Q';
+            leftRow[row] = 1;
+            upperDiagonal[(n - 1) + (col - row)] = 1;
+            lowerDiagonal[row + col] = 1;
+            solve2(col + 1, n, board, leftRow, upperDiagonal, lowerDiagonal);
+            board[row][col] = '.';
+            leftRow[row] = 0;
+            upperDiagonal[(n - 1) + (col - row)] = 0;
+            lowerDiagonal[row + col] = 0;
+        }
+    }
+}
+
 int main() {
 
     int n = 4; 
@@ -141,6 +167,9 @@ int main() {
     for (int i = 0; i < n; i++) {
         board[i] = s;
     }
-    solve(0, n, board);
+    // solve(0, n, board);
+    // Optimizing isSafe() from O(n) to O(1) by using hashing concept.
+    vector<int> leftRow(n, 0), upperDiagonal(2 * n - 1, 0), lowerDiagonal(2 * n - 1, 0); 
+    solve2(0, n, board, leftRow, upperDiagonal, lowerDiagonal);
     return 0; 
 }

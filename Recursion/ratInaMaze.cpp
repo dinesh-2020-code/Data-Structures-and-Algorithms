@@ -60,6 +60,27 @@ void solve(int i, int j, int n, vector<vector<int>> &mat, vector<vector<int>> &v
     }
 }
 
+
+void solve2(int i, int j, int n, vector<vector<int>> &mat, vector<vector<int>> &vis, string move, int di[], int dj[]) {
+    //base case
+    if (i == n - 1 && j == n - 1)
+    {
+        //print move
+        cout << move << "\n";
+        return;
+    }
+    string dir = "DLRU";
+    for (int ind = 0; ind < 4; ind++) {
+        int nexti = i + di[ind];
+        int nextj = j + dj[ind];
+        if (nexti >= 0 && nextj >= 0 && nexti < n && nextj < n && !vis[nexti][nextj] && mat[nexti][nextj]) {
+            vis[i][j] = 1;
+            solve2(nexti, nextj, n, mat, vis, move + dir[ind], di, dj);
+            vis[i][j] = 0;
+        }
+    }
+}
+
 int main() 
 {
     vector<vector<int>> mat = {{1, 0, 0, 0},
@@ -68,8 +89,12 @@ int main()
                                {0, 1, 1, 1}};
     int n = mat.size();
     vector<vector<int>> vis(n, vector<int> (n, 0));
-    if (mat[0][0] == 1) 
-        solve(0, 0, n, mat, vis, "");
+    int di[] = {+1, 0, 0, -1};
+    int dj[] = {0, -1, +1, 0};
+    if (mat[0][0] == 1) {
+        // solve(0, 0, n, mat, vis, "");
+        solve2(0, 0, n, mat, vis, "", di, dj);
+    }
 
     return 0;
 

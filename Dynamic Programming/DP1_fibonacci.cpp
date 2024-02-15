@@ -30,6 +30,17 @@ int fib_tab(int n) {
     }
     return dp[n];
 }
+
+int fib_space_optimization(int n) {
+     //Time : O(n), space : O(1)
+     int prev2 = 0, prev = 1;
+     for (int i = 2; i <= n; i++) {
+        int curr = prev + prev2;
+        prev2 = prev;
+        prev = curr;
+     }
+     return prev; 
+}
 int main() 
 {
     int number; 

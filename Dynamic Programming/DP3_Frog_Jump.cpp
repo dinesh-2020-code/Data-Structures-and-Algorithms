@@ -68,13 +68,30 @@ int frogJumpsTab(vector<int> &arr, vector<int> &dp) {
 
 }
 
+int frogJumpsSO(int n, vector<int> &arr) {
+    // Space optimization to O(1) from O(n)
+    int prev = 0; 
+    int prev2 = 0;
+    int curr = 0; 
+    for (int i = 1; i < n; i++) {
+        int left = prev + abs(arr[i] - arr[i - 1]);
+        int right = INT_MAX; 
+        if (i > 1) 
+            right = prev2 + abs(arr[i] - arr[i - 2]);
+        
+        prev2 = prev; 
+        prev = min(left, right); 
+    }
+    return prev;
+}
+
 int main() {
     
     int n = 4;
     vector <int> arr {10, 20, 30, 10};
     vector<int> dp(n + 1, -1); 
     // cout << frogJumps(n-1, arr, dp) << "\n";
-    cout << frogJumpsTab(arr, dp);
-
+    // cout << frogJumpsTab(arr, dp);
+    cout << frogJumpsSO(n, arr);
     return 0; 
 }

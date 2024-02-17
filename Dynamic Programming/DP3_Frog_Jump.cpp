@@ -52,11 +52,29 @@ int frogJumps(int ind, vector<int> &heights, vector<int> &dp) {
     return dp[ind] = min(left, right);
 }
 
+int frogJumpsTab(vector<int> &arr, vector<int> &dp) {
+    dp[0] = 0;
+
+    for (int i = 1; i < arr.size(); i++) {
+        int left = dp[i - 1] + abs(arr[i] - arr[i - 1]);
+        int right = INT_MAX;
+        if (i > 1)
+            right = dp[i - 2] + abs(arr[i] - arr[i - 2]);
+
+        dp[i] = min(left, right);
+    }
+
+    return dp[arr.size() - 1];
+
+}
+
 int main() {
     
     int n = 4;
     vector <int> arr {10, 20, 30, 10};
     vector<int> dp(n + 1, -1); 
-    cout << frogJumps(n-1, arr, dp) << "\n";
+    // cout << frogJumps(n-1, arr, dp) << "\n";
+    cout << frogJumpsTab(arr, dp);
+
     return 0; 
 }

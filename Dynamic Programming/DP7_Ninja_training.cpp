@@ -29,11 +29,12 @@
 
 
 #include <iostream>
+#include <cstring>
 
 using namespace std; 
 
 
-int ninjaTraining(int ind, int last, int points[][3]) {
+int ninjaTraining(int ind, int last, int points[][3], int dp[][4]) {
     //Top Down approach memoisation: starting from the n-1 th day
     // ind is the ith day
     // last is the activity which was done on the last day (0, 1, 2), 
@@ -50,16 +51,19 @@ int ninjaTraining(int ind, int last, int points[][3]) {
         }
         return maxi; 
     }
+    
+    if (dp[ind][last] != -1)
+        return dp[ind][last];
 
     // Recursive case
     // check for all possible days other than last day
     int maxi = 0; 
     for (int i = 0; i <= 2; i++) {
         if (i != last) { // only take merit point if current ind and last are different
-            maxi = max(maxi, (points[ind][i] + ninjaTraining(ind - 1, i, points)));
+            maxi = max(maxi, (points[ind][i] + ninjaTraining(ind - 1, i, points, dp)));
         }
     }
-    return maxi; 
+    return dp[ind][last] = maxi; 
 
 }
 
@@ -73,7 +77,8 @@ int main() {
                             {10, 1, 6},
                             {8, 3, 7} 
                         };
-    
-    cout << "\n" << ninjaTraining(n - 1, 3, points) << "\n";
+    int dp[n][4];
+    memset(dp, -1, sizeof(dp));
+    cout << "\n" << ninjaTraining(n - 1, 3, points, dp) << "\n";
     return 0; 
 }

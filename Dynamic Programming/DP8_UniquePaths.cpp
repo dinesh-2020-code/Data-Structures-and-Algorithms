@@ -38,11 +38,35 @@ int uniquePaths(int row, int col, vector<vector<int>> &dp) {
     return dp[row][col] = (left + up); //return the paths when following left and up directions
 }
 
+
+void uniquePathsTab(int row, int col) {
+    vector<vector<int>> dp(row, vector<int> (col, -1));
+
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            if (i == 0 && j == 0)
+                dp[i][j] = 1; 
+            else {
+                int left = (j - 1 >= 0) ? dp[i][j-1] : 0;
+                int up = (i - 1 >= 0) ? dp[i - 1][j] : 0;
+                dp[i][j] = left + up; 
+            }
+        }
+    }
+    cout <<  dp[row - 1][col - 1] << "\n"; 
+}
+
 int main() {
 
     const int m = 3; //rows
     const int n = 3; //columns
     vector<vector<int>> dp(m, vector<int>(n, -1));
     cout <<  uniquePaths(m - 1, n - 1, dp) << "\n"; 
+    uniquePathsTab(3, 3);
     return 0; 
 }
+
+// Complexity Analysis
+// Recursive Sol:  Time: O(2 ^ (m * n)) Aux stack space: O(Path length) = O(m - 1) + O(n - 1)
+// Memoization Sol: Time : O(m * n)     Aux stack space: O(Path length) = O(m - 1) + O(n - 1) + Memo table O(m * n)
+// Tabulation: Time : O(m * n)          Aux stack space: O(m *n)

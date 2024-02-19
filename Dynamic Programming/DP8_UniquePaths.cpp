@@ -23,22 +23,26 @@
 using namespace std; 
 
 //Top Down Approach: Memo
-int uniquePaths(int row, int col) {
+int uniquePaths(int row, int col, vector<vector<int>> &dp) {
     //base case, here we are going backwards from (row - 1, col - 1) to (0, 0)
     if (row == 0 && col == 0) 
         return 1; //reached the destination cell
     if (row < 0 || col < 0)
         return 0; 
 
-    int left = uniquePaths(row, col - 1); 
-    int   up = uniquePaths(row - 1, col); 
-    return left + up; //return the paths when following left and up directions
+    if (dp[row][col] != -1)
+        return dp[row][col];
+
+    int left = uniquePaths(row, col - 1, dp); 
+    int   up = uniquePaths(row - 1, col, dp); 
+    return dp[row][col] = (left + up); //return the paths when following left and up directions
 }
 
 int main() {
 
-    int m = 3; //rows
-    int n = 3; //columns
-    cout <<  uniquePaths(m - 1, n - 1) << "\n"; 
+    const int m = 3; //rows
+    const int n = 3; //columns
+    vector<vector<int>> dp(m, vector<int>(n, -1));
+    cout <<  uniquePaths(m - 1, n - 1, dp) << "\n"; 
     return 0; 
 }

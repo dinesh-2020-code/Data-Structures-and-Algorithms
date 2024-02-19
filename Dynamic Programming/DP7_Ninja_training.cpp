@@ -30,6 +30,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <vector>
 
 using namespace std; 
 
@@ -67,6 +68,36 @@ int ninjaTraining(int ind, int last, int points[][3], int dp[][4]) {
 
 }
 
+void ninjaTrainingTab(int n,int points[][3]) {
+
+    vector<vector<int>> dp(n, vector<int> (4, -1));
+    dp[0][0] = max(points[0][1], points[0][2]); 
+    
+    dp[0][1] = max(points[0][0], points[0][2]); 
+    
+    dp[0][2] = max(points[0][1], points[0][0]); 
+    
+    dp[0][3] = max(points[0][1], max(points[0][2], points[0][3])); 
+
+    for (int day = 1; day < n; day++) {
+        for (int last = 0; last <= 3; last++) {
+            dp[day][last] = 0; 
+
+            int maxi = 0; 
+
+            for (int task = 0; task <= 2; task++) {
+                if (task != last) {
+                    int merits = points[day][task] + dp[day-1][task];
+                    maxi = max(maxi, merits);
+                }
+            }
+            dp[day][last] = maxi; 
+        }
+    }
+
+    cout << "\n"<< dp[n-1][3] << "\n";
+}
+
 int main() {
 
     const int n = 4;
@@ -80,5 +111,6 @@ int main() {
     int dp[n][4];
     memset(dp, -1, sizeof(dp));
     cout << "\n" << ninjaTraining(n - 1, 3, points, dp) << "\n";
+    ninjaTrainingTab(n, points);
     return 0; 
 }

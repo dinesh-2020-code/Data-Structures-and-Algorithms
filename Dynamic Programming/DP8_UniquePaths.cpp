@@ -56,13 +56,33 @@ void uniquePathsTab(int row, int col) {
     cout <<  dp[row - 1][col - 1] << "\n"; 
 }
 
+void uniquePathsSO(int row, int col) {
+    vector<int> prev_row(col, 0); 
+     
+    for (int i = 0; i < row; i++) {
+        vector<int> temp(col, 0); 
+        for (int j = 0; j < col; j++) { 
+            if (i == 0 && j == 0)
+                temp[j] = 1; 
+            else {
+                int left = (j - 1 >= 0) ? temp[j-1] : 0;
+                int up = (i - 1 >= 0) ? prev_row[j] : 0;
+                temp[j] = left + up;
+            }
+        }
+        prev_row = temp; 
+    }
+    cout << prev_row[col - 1] << "\n"; 
+}
+
 int main() {
 
     const int m = 3; //rows
     const int n = 3; //columns
     vector<vector<int>> dp(m, vector<int>(n, -1));
     cout <<  uniquePaths(m - 1, n - 1, dp) << "\n"; 
-    uniquePathsTab(3, 3);
+    uniquePathsTab(m, n);
+    uniquePathsSO(m, n); 
     return 0; 
 }
 

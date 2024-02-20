@@ -43,6 +43,61 @@ int minPathSum(int row, int col, vector<vector<int>> &grid, vector<vector<int>> 
     return dp[row][col] = min(up, left);
 }
 
+void minPathSumTab(int row, int col, vector<vector<int>> &grid) {
+
+    vector<vector<int>> dp(row, vector<int> (col, -1)); 
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            if (i == 0 && j == 0)
+                dp[i][j] = grid[i][j];
+            else {
+                int up = grid[i][j];
+                if (i > 0)
+                    up += dp[i-1][j];
+                else
+                    up += 1e9; // neglect the whole path if out of bound indexes
+                
+                int left = grid[i][j];
+                if (j > 0)
+                    left += dp[i][j-1];
+                else 
+                    left += 1e9; //out of bound index, so neglect the whole path
+
+                dp[i][j] = min(up, left); 
+            }
+        }
+    }
+    cout << dp[row - 1][col - 1] << "\n"; 
+}
+void minPathSumTabSO(int row, int col, vector<vector<int>> &grid) {
+
+    vector<int> prev(row, 0); 
+    for (int i = 0; i < row; i++) {
+        vector<int> curr(col, 0);
+        for (int j = 0; j < col; j++) {
+            if (i == 0 && j == 0)
+                curr[j] = grid[i][j];
+            else {
+                int up = grid[i][j];
+                if (i > 0)
+                    up += prev[j];
+                else
+                    up += 1e9; // neglect the whole path if out of bound indexes
+                
+                int left = grid[i][j];
+                if (j > 0)
+                    left += curr[j-1];
+                else 
+                    left += 1e9; //out of bound index, so neglect the whole path
+
+                curr[j] = min(up, left); 
+            }
+        }
+        prev = curr; 
+    }
+    cout << prev[col - 1] << "\n"; 
+}
+
 int main() {
 
     int n = 2, m = 3; // n -> rows, m -> columns
@@ -52,8 +107,8 @@ int main() {
     };
     vector<vector<int>> dp (n, vector<int> (m, -1));
     cout << "Min path sum is: " << minPathSum(n - 1, m - 1, grid, dp) << "\n"; 
-
-
+    cout << "Min path sum is: "; minPathSumTab(n, m, grid);
+    cout << "Min path sum is: "; minPathSumTabSO(n, m, grid);
 
     return 0; 
 }

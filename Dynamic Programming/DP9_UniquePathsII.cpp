@@ -24,7 +24,30 @@
 
 using namespace std; 
 
-int uniquePathsII(int row, int col, vector<vector<int>> &mat) {
+const int mod = (int)(1e9 + 7);
+
+
+void uniquePathsIITab(int row, int col, vector<vector<int>> &mat) {
+    vector<vector<int>> dp(row, vector<int> (col, -1));
+
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            if (i >= 0 && j >= 0 && mat[i][j] == -1)
+                dp[i][j] = 0;
+            else if (i == 0 && j == 0)
+                dp[i][j] = 1; 
+            else {
+                int left = (j - 1 >= 0) ? dp[i][j-1] : 0;
+                int up = (i - 1 >= 0) ? dp[i - 1][j] : 0;
+                dp[i][j] = (left + up) % mod; 
+            }
+        }
+    }
+    cout <<  dp[row - 1][col - 1] % mod << "\n"; 
+}
+
+
+int uniquePathsII(int row, int col, vector<vector<int>> &mat, vector<vector<int>> &memo) {
     
     //If the cell is a dead cell.
     if (row >= 0 && col >= 0 && mat[row][col] == -1)
@@ -35,11 +58,14 @@ int uniquePathsII(int row, int col, vector<vector<int>> &mat) {
 
     if (row < 0 || col < 0)
         return 0; 
+    
+    if (memo[row][col] != -1)
+        return memo[row][col];
 
-    int left = uniquePathsII(row, col - 1, mat); 
-    int   up = uniquePathsII(row - 1, col, mat);
+    int left = uniquePathsII(row, col - 1, mat, memo); 
+    int   up = uniquePathsII(row - 1, col, mat, memo);
 
-    return left + up; 
+    return memo[row][col] = (left + up) % mod;; 
 } 
 int main() {
 
@@ -49,8 +75,8 @@ int main() {
         {0, -1, 0}, 
         {0, 0, 0}
     }; 
-
-    cout << uniquePathsII(n - 1, m - 1, mat) << endl; 
-
+    vector<vector<int>> memo(n, vector<int> (m, -1));
+    cout << uniquePathsII(n - 1, m - 1, mat, memo) << endl; 
+    uniquePathsIITab(n, m, mat);
     return 0; 
 }

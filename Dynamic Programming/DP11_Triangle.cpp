@@ -36,6 +36,26 @@ int minPathSumInTriangle(int row, int col, int n, vector<vector<int>>& triangle,
 	return dp[row][col] = min(down, diag); 
 }
 
+
+void minPathSumInTriangleTab(int n, vector<vector<int>> &triangle) {
+    vector<vector<int>> dp (n, vector<int> (n, -1));
+    //fill the base case in the dp table
+    //for row n-1, fill the value same as it is
+    for (int i = 0; i < n; i++) {
+        dp[n-1][i] = triangle[n-1][i]; 
+    }
+
+    for (int i = n - 2; i >= 0; i--) {
+        for (int j = 0; j <= i; j++) {
+            int down = triangle[i][j] + dp[i + 1][j]; 
+            int diag = triangle[i][j] + dp[i + 1][j + 1]; 
+            dp[i][j] = min(down, diag);
+        }
+    }
+
+    cout << dp[0][0] << "\n"; 
+}
+
 int main() 
 {
     vector<vector<int>> triangle = {
@@ -47,6 +67,7 @@ int main()
     int n = triangle.size();
     vector<vector<int>> dp(n, vector<int> (n, -1));
     cout << minPathSumInTriangle(0, 0, n, triangle, dp) << "\n";  
+    minPathSumInTriangleTab(n, triangle); 
 
     return 0; 
 }
@@ -58,6 +79,10 @@ int main()
  *  we have 2 ^ (1 + 2 + 3 + ...+ n) operations  for recursive sol
  *  Space Complexity: O(n) stack space
  * 
- * Memoization code
+ * Memoization code 
+ *  Time : O(n * n)
+ * Space Complexity: O(N) stack space + O(n * n) dp table space
+ * 
+ * Tabulation Code: 
  * 
 */

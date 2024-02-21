@@ -56,6 +56,29 @@ void minPathSumInTriangleTab(int n, vector<vector<int>> &triangle) {
     cout << dp[0][0] << "\n"; 
 }
 
+
+void minPathSumInTriangleSO(int n, vector<vector<int>> &triangle) {
+    vector<vector<int>> dp (n, vector<int> (n, -1));
+    //fill the base case in the dp table
+    //for row n-1, fill the value same as it is
+    vector<int> curr(n, 0); 
+    for (int i = 0; i < n; i++) {
+        curr[i] = triangle[n-1][i]; 
+    }
+    
+    for (int i = n - 2; i >= 0; i--) {
+        vector<int> temp(n, 0); 
+        for (int j = 0; j <= i; j++) {
+            int down = triangle[i][j] + curr[j]; 
+            int diag = triangle[i][j] + curr[j + 1]; 
+            temp[j] = min(down, diag);
+        }
+        curr = temp;
+    }
+
+    cout << curr[0] << "\n"; 
+}
+
 int main() 
 {
     vector<vector<int>> triangle = {
@@ -68,6 +91,7 @@ int main()
     vector<vector<int>> dp(n, vector<int> (n, -1));
     cout << minPathSumInTriangle(0, 0, n, triangle, dp) << "\n";  
     minPathSumInTriangleTab(n, triangle); 
+    minPathSumInTriangleSO(n, triangle); 
 
     return 0; 
 }
@@ -84,5 +108,11 @@ int main()
  * Space Complexity: O(N) stack space + O(n * n) dp table space
  * 
  * Tabulation Code: 
+ * Time : O(n * n)
+ * Aux space: O(n * n) -> Dp table
  * 
+ * Space Optimization to Tabulation: 
+ * Time : O(n * n)
+ * Aux Space: O(n)
+ *  
 */

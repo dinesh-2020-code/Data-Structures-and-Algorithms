@@ -170,5 +170,8 @@ int main() {
  *  Tabulation: 
  *  Time: O(n * m) + O(m) where n is the no of rows amd m is the no. of cols
  *  Aux Space: O(n * m)
+ * 
+ * Space Optimization: 
+ *  O(n)
  *  
 */

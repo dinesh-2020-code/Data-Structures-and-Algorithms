@@ -25,6 +25,7 @@
  *  Output: 105       74                          25
  * 
  * 
+ * f(row, col) -> max path sum to reach (row, col) from any cell in the first row
 */
 
 
@@ -51,16 +52,63 @@ int maxPathSum(int row, int col, int n, int m, vector<vector<int>> &mat, vector<
     return dp[row][col] = max(down, max(down_left, down_right)); 
 }
 
+//Tabulation : Bottom Up approach, start from last row and fill towards up
+int maxPathSumTab(int n, int m, vector<vector<int>> &mat) {
+
+    vector<vector<int>> dp(n, vector<int> (m, 0)) ; //declares a DP table of n * m
+    //fill the base case in the table first
+    //fill the last row in dp table
+    for (int i = 0; i < m; i++) {
+        dp[n - 1][i] = mat[n - 1][i]; 
+    }
+
+    //last row is filled, start form (n-2)th row
+    for (int row = n - 2; row >= 0; row--) {
+        for (int col = 0; col < m; col++) {
+            int cell = mat[row][col];
+            int down_left = mat[row][col]; 
+            if (col - 1 >= 0) {
+                down_left += dp[row + 1][col - 1];
+            }
+            else
+                down_left += -1e9;
+
+            int down      = mat[row][col] + dp[row + 1][col];
+            int down_right= mat[row][col];
+            if (col + 1 < m) 
+                down_right += dp[row + 1][col + 1]; 
+            else
+                down_right += -1e9;
+
+            dp[row][col] = max(down, max(down_left, down_right)); 
+        }
+    }
+
+    int ans = INT_MIN; 
+    for (int i = 0; i < m; i++){
+        //calculating the max element among row
+        ans = max(ans, dp[0][i]); 
+    }
+
+    cout << ans << "\n"; 
+}
 
 int main() {
 
-    vector<vector<int>> matrix = 
-                                {
-                                    {1, 2, 10, 4}, 
-                                    {100, 3, 2, 1},
-                                    {1, 1, 20, 2}, 
-                                    {1, 2, 2, 1}
-                                };
+    vector<vector<int>> matrix = {
+
+                                {-9999, -9888, -9777, -9666, -9555},
+                                {1, 10, 2, 4, 5},
+                                {-9999, -9888, -9777, -9666, -9555},
+                                {0, 0, 0, 0, 0},
+                                {-99, -98, -97, -96, -95}
+                                // {-9999, -9888, -9777, -9666, -9555}};
+                                // {
+                                //     {1, 2, 10, 4}, 
+                                //     {100, 3, 2, 1},
+                                //     {1, 1, 20, 2}, 
+                                //     {1, 2, 2, 1}
+                             };
     int n = matrix.size(); //rows
     int m = matrix[0].size(); //cols
 
@@ -71,5 +119,23 @@ int main() {
     }
     cout << ans << "\n";
 
+    maxPathSumTab(n, m, matrix); 
+
     return 0; 
 }
+
+/**
+ * Asymptotic Analysis
+ * Recursive: 
+ *  Time : O(3 ^ n), where n is the rows
+ *  Aux Stack space: O(n)
+ * 
+ *  Memoized Sol
+ * Time: O(n * m) where n is the no of rows amd m is the no. of cols
+ *  Aux Space: O(n) {Recursive stack space} + O(n * m) {DP table}
+ * 
+ *  Tabulation: 
+ *  Time: O(n * m) where n is the no of rows amd m is the no. of cols
+ *  Aux Space: 
+ *  
+*/

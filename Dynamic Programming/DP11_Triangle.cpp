@@ -58,7 +58,6 @@ void minPathSumInTriangleTab(int n, vector<vector<int>> &triangle) {
 
 
 void minPathSumInTriangleSO(int n, vector<vector<int>> &triangle) {
-    vector<vector<int>> dp (n, vector<int> (n, -1));
     //fill the base case in the dp table
     //for row n-1, fill the value same as it is
     vector<int> curr(n, 0); 

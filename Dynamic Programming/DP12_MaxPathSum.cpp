@@ -93,6 +93,38 @@ int maxPathSumTab(int n, int m, vector<vector<int>> &mat) {
     cout << ans << "\n"; 
 }
 
+int maxPathSumSO(int n, int m, vector<vector<int>> &mat) {
+
+    vector<int> prev(m, 0); 
+    //fill the base case in the table first
+    //fill the last row in dp table
+    for (int i = 0; i < m; i++) {
+        prev[i] = mat[n - 1][i]; 
+    }
+
+    //last row is filled, start form (n-2)th row
+    for (int row = n - 2; row >= 0; row--) {
+        vector<int> curr(m, 0); 
+        for (int col = 0; col < m; col++) {
+            int cell = mat[row][col];
+            int down_left = (col - 1 >= 0) ? (cell + prev[col - 1]) : -1e8 + cell; 
+            int down      = cell + prev[col];
+            int down_right= (col + 1 < m) ? (cell + prev[col + 1]) : -1e8 + cell;
+            curr[col] = max(down, max(down_left, down_right)); 
+        }
+        prev = curr; 
+    }
+
+    int ans = INT_MIN; 
+    for (int i = 0; i < m; i++){
+        //calculating the max element among row
+        ans = max(ans, prev[i]); 
+    }
+
+    cout << ans << "\n"; 
+}
+
+
 int main() {
 
     vector<vector<int>> matrix = {
@@ -120,6 +152,7 @@ int main() {
     cout << ans << "\n";
 
     maxPathSumTab(n, m, matrix); 
+    maxPathSumSO(n, m, matrix); 
 
     return 0; 
 }
@@ -135,7 +168,7 @@ int main() {
  *  Aux Space: O(n) {Recursive stack space} + O(n * m) {DP table}
  * 
  *  Tabulation: 
- *  Time: O(n * m) where n is the no of rows amd m is the no. of cols
- *  Aux Space: 
+ *  Time: O(n * m) + O(m) where n is the no of rows amd m is the no. of cols
+ *  Aux Space: O(n * m)
  *  
 */

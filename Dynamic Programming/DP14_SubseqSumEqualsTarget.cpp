@@ -8,6 +8,7 @@
  * If ‘ARR’ is {1,2,3,4} and ‘K’ = 4, then there exists 2 subsets with sum = 4. These are {1,3}
  * and {4}. Hence, return true.
  * 
+ * Input: {6, 1, 2, 1}, k = 4   Output: true
  * 
  * fun(n-1, target) => represents in entire array, till index n-1, does there exists any target?
  * 
@@ -72,7 +73,8 @@ void subsetSumEqualsKTab(int n, int k, vector<int> &arr) {
     }
 
     // case 2: 
-    dp[0][arr[0]] = 1; // dp[0][1] means that till index 0 and sum is 1 (acc to input {1, 2, 3, 4})
+    if (arr[0] <= k) 
+        dp[0][arr[0]] = 1; // dp[0][1] means that till index 0 and sum is 1 (acc to input {1, 2, 3, 4})
 
     for (int ind = 1; ind < n; ind++) {
         
@@ -90,6 +92,27 @@ void subsetSumEqualsKTab(int n, int k, vector<int> &arr) {
 }
 
 
+void subsetSumEqualsKSO(int n, int k, vector<int> &arr) {
+
+    vector<int> prev (k + 1, 0); 
+    prev[0] = 1; 
+    if (arr[0] <= k) 
+        prev[arr[0]] = 1;
+
+    for (int ind = 1; ind < n; ind++) {
+        vector<int> curr(k + 1, 0); 
+        curr[0] = 1; //0th col is marked as 1 for every row
+        for (int target = 1; target <= k; target++) {
+            int notTake = prev[target];
+            int take = (arr[ind] <= target) ? prev[target - arr[ind]] : 0; 
+            curr[target] = take || notTake; 
+        }
+        prev = curr; 
+    }
+    cout << prev[k] << "\n";     
+}
+
+
 int main() {
 
     vector<int> arr = {1, 2, 3, 4}; 
@@ -99,8 +122,10 @@ int main() {
     //we have 2 states index (0 <= ind < n) and target (0 <= target <= k)
     vector<vector<int>> dp(n, vector<int>(k + 1, -1)); 
     cout << subsetSumEqualsK(n - 1, k, arr, dp) << "\n"; 
-    subsetSumEqualsKTab(n, k, arr); 
+    subsetSumEqualsKTab (n, k, arr);
+    subsetSumEqualsKSO (n, k, arr); 
     return 0; 
+
 }
 
 /**
@@ -116,4 +141,6 @@ int main() {
  * Tabulation: 
  *      Time: O(n * k)
  *      Aux Space: O(n * k)
+ * 
+ * Space Optimization: O(k) 
 */

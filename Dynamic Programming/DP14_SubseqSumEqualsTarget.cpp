@@ -36,7 +36,7 @@
 using namespace std; 
 
 
-int subsetSumEqualsK(int ind, int target, vector<int> &arr) {
+int subsetSumEqualsK(int ind, int target, vector<int> &arr, vector<vector<int>> &dp) {
 
     //base case
     if (target == 0)
@@ -45,14 +45,16 @@ int subsetSumEqualsK(int ind, int target, vector<int> &arr) {
     if (ind == 0) 
         return (arr[ind] == target) ? true : false;
 
-    bool notTake = subsetSumEqualsK(ind - 1, target, arr); 
-    bool take = false;
-    //when to take current element? Take the current element when it is <= target
-    if (arr[ind] <= target) {
-        take = subsetSumEqualsK(ind - 1, target - arr[ind], arr);
-    }
+    if (dp[ind][target] != -1)
+        return dp[ind][target];
 
-    return take || notTake; 
+    bool notTake = subsetSumEqualsK(ind - 1, target, arr, dp); 
+    bool take = false;
+    //when to take current element? Take the current element when curr_element is <= target
+    if (arr[ind] <= target) {
+        take = subsetSumEqualsK(ind - 1, target - arr[ind], arr, dp);
+    }
+    return dp[ind][target] = (take || notTake); 
 }
 
 
@@ -62,7 +64,8 @@ int main() {
     int n = arr.size(); 
     int k = 4; 
 
-    cout << subsetSumEqualsK(n - 1, k, arr) << "\n"; 
-
+    //we have 2 states index (0 <= ind < n) and target (0 <= target <= k)
+    vector<vector<int>> dp(n, vector<int>(k + 1, -1)); 
+    cout << subsetSumEqualsK(n - 1, k, arr, dp) << "\n"; 
     return 0; 
 }

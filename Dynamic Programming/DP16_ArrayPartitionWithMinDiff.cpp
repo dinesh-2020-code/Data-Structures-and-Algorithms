@@ -80,12 +80,48 @@ int minSubsetSumDifference(vector<int> &arr, int n) {
     return ans;
 }
 
+int minSubsetSumDifferenceSO(vector<int> &arr, int n) {
+    int totalSum = 0; 
+    int s1 = 0, s2 = 0, diff = 0;  //partition sums 
+    for (auto it : arr)
+        totalSum += it; 
+    int k = totalSum; 
+    vector<int> prev(k + 1, 0);
+    prev[0] = 1;
+    if (arr[0] <= k)
+        prev[arr[0]] = 1;
+
+    for (int ind = 1; ind < n; ind++) {
+        vector<int> curr(k + 1, 0);
+        curr[0] = 1; // 0th col is marked as 1 for every row
+        for (int target = 1; target <= k; target++) {
+            int notTake = prev[target];
+            int take = (arr[ind] <= target) ? prev[target - arr[ind]] : 0;
+            curr[target] = take || notTake;
+        }
+        prev = curr;
+    }
+    int ans = 1e9; 
+    // Traverse through prev (last) row
+    for (int i = 0; i <= (k / 2); i++) {
+        if (prev[i]) {
+            s1 = i; 
+            s2 = totalSum - i; 
+            diff = abs(s1 - s2); 
+            ans = min(ans, diff); 
+        }
+    }
+    return ans;
+}
+
+
 int main() {
 
     vector<int> arr = {3, 2, 7}; //{1, 2, 3, 4};
     int n = arr.size();
 
     cout << "The minimum absolute difference is: " << minSubsetSumDifference(arr, n) << "\n";
+    cout << "The minimum absolute difference is: " << minSubsetSumDifferenceSO(arr, n) << "\n";
 
     return 0; 
 }

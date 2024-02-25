@@ -80,6 +80,58 @@ int minSubsetSumDifference(vector<int> &arr, int n) {
     return ans;
 }
 
+
+int minSubsetSumDifferenceTab(vector<int> &arr, int n) {
+    int totalSum = 0, s1 = 0, s2 = 0;
+    int diff = 0;
+    // Calculate the total sum of the array
+    for (int i = 0; i < n; i++) {
+        totalSum += arr[i];
+    }
+    int k = totalSum;
+    vector<vector<int> > dp (n, vector<int> (k + 1, 0));
+
+    // Fill DP table with base cases
+    // case 1: IF target IS 0: index ranges as  0 <= ind < n
+    // case 2: IF ind IS 0 => if arr[ind] is also 0, then return true;
+
+    // case 1:
+    for (int ind = 0; ind < n; ind++) {
+        dp[ind][0] = 1; 
+    }
+
+    // case 2: 
+    if (arr[0] <= k) 
+        dp[0][arr[0]] = 1; // dp[0][1] means that till index 0 and sum is 1 (acc to input {1, 2, 3, 4})
+
+    for (int ind = 1; ind < n; ind++) {
+        
+        for (int target = 1; target <= k; target++) {  
+            int notTake = dp[ind - 1][target]; 
+            int take = 0; 
+            //take if arr[ind] <= target
+            if (arr[ind] <= target) 
+                take = dp[ind - 1][target - arr[ind]]; 
+
+            dp[ind][target] = take || notTake; 
+        }
+    }
+
+    // dp[n - 1][col <-- 0 to k]
+    int ans = 1e9;
+    // Traverse through (last) row
+    for (int i = 0; i <= (k / 2); i++) {
+        if (dp[n - 1][i]) {
+            s1 = i; 
+            s2 = totalSum - i; 
+            diff = abs(s1 - s2); 
+            ans = min(ans, diff); 
+        }
+    }
+    return ans;
+}
+
+
 int minSubsetSumDifferenceSO(vector<int> &arr, int n) {
     int totalSum = 0; 
     int s1 = 0, s2 = 0, diff = 0;  //partition sums 
@@ -122,6 +174,6 @@ int main() {
 
     cout << "The minimum absolute difference is: " << minSubsetSumDifference(arr, n) << "\n";
     cout << "The minimum absolute difference is: " << minSubsetSumDifferenceSO(arr, n) << "\n";
-
+    cout << "The minimum absolute difference is: " << minSubsetSumDifferenceTab(arr, n) << "\n";
     return 0; 
 }

@@ -44,6 +44,54 @@ int partitionEqualSubsetSum(int ind, int currSum, int totalSum, vector<int> &arr
     return dp[ind][currSum] = (pick | notPick);
 }
 
+
+void partitionEqualSubsetSumTab(vector<int> &nums) {
+
+    int totalSum = 0, n = nums.size();
+    for (auto it : nums)
+        totalSum += it;
+
+    vector<vector<int>> dp(n, vector<int>(totalSum + 1, 0));
+    // Fill DP table
+    // Base case if ind is 0
+    for (int s1 = 0; s1 <= totalSum; s1++)
+        dp[0][s1] = (s1 == (totalSum - s1)) ? 1 : 0;
+
+    for (int ind = 1; ind < n; ind++) {
+
+        for (int s1 = 0; s1 <= totalSum; s1++) {
+            int notPick = dp[ind - 1][s1];
+            int pick = (s1 - nums[ind] >= 0) ? dp[ind - 1][s1 - nums[ind]] : 0;
+            dp[ind][s1] = pick | notPick;
+        }
+    }
+
+    cout << dp[n - 1][totalSum] << "\n";
+}
+
+
+void partitionEqualSubsetSumSO(vector<int> &nums) {
+    int totalSum = 0, n = nums.size();
+    for (auto it : nums)
+        totalSum += it;
+    vector<int> prev(totalSum + 1, 0); 
+    for (int s1 = 0; s1 <= totalSum; s1++)
+        prev[s1] = (s1 == (totalSum - s1)) ? 1 : 0;
+
+    for (int ind = 1; ind < n; ind++) {
+        vector <int> curr(totalSum + 1, 0); 
+        for (int s1 = 0; s1 <= totalSum; s1++) {
+            int notPick = prev[s1];
+            int pick = (s1 - nums[ind] >= 0) ? prev[s1 - nums[ind]] : 0;
+            curr[s1] = pick | notPick;
+        }
+        prev = curr; 
+    }
+
+    cout <<  prev[totalSum] << "\n";
+}
+
+
 int main() {
 
     vector<int> arr = {3, 1, 1, 2, 2, 1};
@@ -54,7 +102,8 @@ int main() {
     
     vector<vector<int>> dp(n, vector<int> (totalSum + 1, -1));
     cout << partitionEqualSubsetSum(n - 1, 0, totalSum, arr, dp) << endl;
-
+    partitionEqualSubsetSumTab(arr);
+    partitionEqualSubsetSumSO(arr);
     return 0; 
 }
 

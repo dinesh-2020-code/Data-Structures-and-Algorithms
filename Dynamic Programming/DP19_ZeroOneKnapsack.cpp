@@ -42,7 +42,41 @@ int knapsack(int ind, int cap, vector<int> &weight, vector<int> &value, vector<v
 	// 					 O(N * MaxWeight)		Memoization
 }
 
+void print2DV(vector<vector<int>> &v) {
+    for (int i = 0; i < v.size(); i++) {
+        for(int j = 0; j < v[i].size(); j++) 
+            cout << v[i][j] << " ";
+        cout << "\n";
+    }
+    cout << "\n";
+}
 
+
+int knapsackTab(int cap, vector<int> &weights, vector<int> &values)
+{
+    //Initialize dp table with 0
+    int n = weights.size();
+    vector<vector<int>> dp (n, vector<int> (cap + 1, 0));
+
+    //fill base cases in DP table
+    for (int c = 0; c <= cap; c++) {
+        if (c >= weights[0]) 
+            dp[0][c] = values[0];
+        else 
+            dp[0][c] = 0;
+    }
+    // print2DV(dp);
+    for (int ind = 1; ind < n; ind++) {
+
+        for (int c = 0; c <= cap; c++) {
+            int notTake = 0 + dp[ind - 1][c];
+            int take = (c >= weights[ind]) ? values[ind] + dp[ind - 1][c - weights[ind]] : -1e9;
+            dp[ind][c] = max(take, notTake);
+        }
+        // print2DV(dp);
+    }
+    return dp[n - 1][cap];
+}
 int main()
 {
     vector<int> weights = {1, 2, 4, 5};
@@ -50,6 +84,7 @@ int main()
     int maxWeight = 5;
     int n = weights.size();
     vector<vector<int>> dp (n, vector<int> (maxWeight + 1, -1));
-    cout << "The Maximum value of items the thief can steal is " << knapsack(n - 1, maxWeight, weights, values, dp);
+    cout << "The Maximum value of items the thief can steal is " << knapsack(n - 1, maxWeight, weights, values, dp) << "\n";
+    cout << "The Maximum value of items the thief can steal is " << knapsackTab(maxWeight, weights, values) << "\n";
     return 0; 
 }

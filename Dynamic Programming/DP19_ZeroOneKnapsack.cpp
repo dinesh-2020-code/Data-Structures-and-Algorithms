@@ -77,6 +77,35 @@ int knapsackTab(int cap, vector<int> &weights, vector<int> &values)
     }
     return dp[n - 1][cap];
 }
+
+// Space Optimization to O(maxWeight) or O(W)
+int knapsackSO(int cap, vector<int> &weights, vector<int> &values)
+{
+    //Initialize dp table with 0
+    int n = weights.size();
+    vector<int> prev (cap + 1, 0), curr (cap + 1, 0);
+
+    //fill base cases in DP table
+    for (int c = 0; c <= cap; c++) {
+        if (c >= weights[0]) 
+            prev[c] = values[0];
+        else 
+            prev[c] = 0;
+    }
+    // print2DV(dp);
+    for (int ind = 1; ind < n; ind++) {
+
+        for (int c = 0; c <= cap; c++) {
+            int notTake = 0 + prev[c];
+            int take = (c >= weights[ind]) ? values[ind] + prev[c - weights[ind]] : -1e9;
+            curr[c] = max(take, notTake);
+        }
+        prev = curr;
+    }
+    return prev[cap];
+}
+
+
 int main()
 {
     vector<int> weights = {1, 2, 4, 5};
@@ -86,5 +115,6 @@ int main()
     vector<vector<int>> dp (n, vector<int> (maxWeight + 1, -1));
     cout << "The Maximum value of items the thief can steal is " << knapsack(n - 1, maxWeight, weights, values, dp) << "\n";
     cout << "The Maximum value of items the thief can steal is " << knapsackTab(maxWeight, weights, values) << "\n";
+    cout << "The Maximum value of items the thief can steal is " << knapsackSO(maxWeight, weights, values) << "\n";
     return 0; 
 }

@@ -45,13 +45,13 @@ int countSubsetsWithSumK(int ind, int curr_sum, vector<int> &arr, vector<vector<
 
 	//base cases
 	if (ind == 0) {
-		if (curr_sum == 0 && arr[0] == 0)
+		if (curr_sum == 0 && arr[0] == 0)  //case 1
 			return 2; // 2 possible case, either take 0 or don't take 0
 		
-		if (curr_sum == 0 || arr[0] == curr_sum)
+		if (curr_sum == 0 || arr[0] == curr_sum)  // case 2
 			return 1; 
 		else
-			return 0; 
+			return 0;  // case 3
 	}
 	if (dp[ind][curr_sum] != -1)
 		return dp[ind][curr_sum]; 
@@ -76,11 +76,46 @@ int countPartitionWithGivenDiff(vector<int> &arr, int diff) {
     
 }
 
+
+int countPartitionWithGivenDiffTab( vector<int> &arr, int diff) {
+    int totalSum = 0; 
+    for (auto it : arr)
+        totalSum += it;
+
+    if ((totalSum - diff) < 0 || (totalSum - diff) % 2)
+        return 0;
+    int n = arr.size();
+    int k = (totalSum - diff) / 2; // s1 - s2 = d, putting s1 as totalSum - s2
+    vector<vector<int>> dp(n, vector<int>(k + 1, 0));
+    
+    //write base cases in table
+    if (arr[0] == 0)   // case 1
+        dp[0][0] = 2;
+    else 
+        dp[0][0] = 1; // case 2
+    
+    if (arr[0] != 0 && arr[0] <= k)   // case 2 (arr[0] == curr_sum arr [5], curr_sum is also 5, so there is 1 way only)
+        dp[0][arr[0]] = 1;
+
+    for (int ind = 1; ind < n; ind++) {
+
+        for (int curr_sum = 0; curr_sum <= k; curr_sum++) {
+            int notPick = dp[ind - 1][curr_sum];
+            int pick = (arr[ind] <= curr_sum) ? dp[ind - 1][curr_sum - arr[ind]] : 0;
+            dp[ind][curr_sum] = (pick + notPick) % mod; 
+        }
+    }
+    return dp[n-1][k]; 
+}
+
+
 int main() {
 
-    vector<int> arr = {5, 2, 6, 4};
+    // vector<int> arr = {5, 2, 6, 4}; diff = 3
+    vector<int> arr = {1, 1, 1, 1};
     int n    = arr.size(); 
-    int diff = 3; 
-    cout << "Total Partitions with Diff D are: " << countPartitionWithGivenDiff(arr, diff) << endl;
+    int diff = 0; 
+    cout << "Total Partitions with Diff " << diff << " are: " << countPartitionWithGivenDiff(arr, diff) << endl;
+    cout << "Total Partitions with Diff " << diff << " are: " << countPartitionWithGivenDiffTab(arr, diff) << endl;
     return 0; 
 }

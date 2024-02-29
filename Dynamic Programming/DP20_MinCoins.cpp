@@ -16,7 +16,11 @@
  * Here, you can see in Way 2 we have used 3 coins to reach the target sum of 7.
  * Hence the output is 3.
  * 
+ * Input: 
+ *  4 5  // N Target
+ *  17 7 8 6  //coins denominations
  * 
+ * Output: -1
  * 
  * 
 */
@@ -58,6 +62,28 @@ int memoizedSol (vector<int> &coins, int target) {
 }
 
 
+int minCoinsTab (vector<int> &coins, int target) {
+    int n = coins.size();
+    vector<vector<int>> dp (n, vector<int> (target + 1, 0));
+    //write base cases in table
+    //case1: if ind = 0
+    for (int t = 0; t <= target; t++) {
+        dp[0][t] = (t % coins[0] == 0) ? t / coins[0] : 1e9;
+    }
+
+    //recursive cases
+    for (int ind = 1; ind < n; ind++) {
+        
+        for (int t = 0; t <= target; t++) {
+            int notTake = dp[ind - 1][t];
+            int take = (coins[ind] <= t) ? (1 + dp[ind][t - coins[ind]]) : 1e9;
+            dp[ind][t] = min(take, notTake);
+        }
+    }
+    int ans = dp[n-1][target];
+    return (ans == 1e9) ? -1 : ans;
+}
+
 int main() {
 
     int n;
@@ -74,7 +100,8 @@ int main() {
     cout << "Enter target summation of coins: ";
     cin >> target;
 
-    cout << "The minimum amount of Coins required to make target of " << target << " are: " << memoizedSol(coins, target);
+    cout << "The minimum amount of Coins required to make target of " << target << " are: " << memoizedSol (coins, target) << "\n";
+    cout << "The minimum amount of Coins required to make target of " << target << " are: " << minCoinsTab (coins, target) << "\n";
 
     return 0;
 }

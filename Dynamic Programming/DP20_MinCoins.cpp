@@ -83,6 +83,8 @@ int minCoinsTab (vector<int> &coins, int target) {
     int ans = dp[n-1][target];
     return (ans == 1e9) ? -1 : ans;
 }
+
+
 int minCoinsSO (vector<int> &coins, int target) {
     int n = coins.size();
     vector<int> prev (target + 1, 0);
@@ -133,5 +135,7 @@ int main() {
  * Complexity: 
  * Recursive  Time: : >> O(2^n) or exponential     Space: O(target)
  * Memoization Time: : O(N * target)     Aux Space: O(N * target)[dp array] + O(N)[stack space]
+ * Tabulation: Time:   O(N * target)    Aux Space: O(N * target)
+ * Space Optimization : O(target) 
  * 
 */

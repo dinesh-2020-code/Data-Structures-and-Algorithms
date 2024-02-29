@@ -83,6 +83,28 @@ int minCoinsTab (vector<int> &coins, int target) {
     int ans = dp[n-1][target];
     return (ans == 1e9) ? -1 : ans;
 }
+int minCoinsSO (vector<int> &coins, int target) {
+    int n = coins.size();
+    vector<int> prev (target + 1, 0);
+    //write base cases in table
+    //case1: if ind = 0
+    for (int t = 0; t <= target; t++) {
+        prev[t] = (t % coins[0] == 0) ? t / coins[0] : 1e9;
+    }
+
+    //recursive cases
+    for (int ind = 1; ind < n; ind++) {
+        vector<int> curr (target + 1, 0);
+        for (int t = 0; t <= target; t++) {
+            int notTake = prev[t];
+            int take = (coins[ind] <= t) ? (1 + curr[t - coins[ind]]) : 1e9;
+            curr[t] = min(take, notTake);
+        }
+        prev = curr;
+    }
+    int ans = prev[target];
+    return (ans == 1e9) ? -1 : ans;
+}
 
 int main() {
 
@@ -102,6 +124,7 @@ int main() {
 
     cout << "The minimum amount of Coins required to make target of " << target << " are: " << memoizedSol (coins, target) << "\n";
     cout << "The minimum amount of Coins required to make target of " << target << " are: " << minCoinsTab (coins, target) << "\n";
+    cout << "The minimum amount of Coins required to make target of " << target << " are: " << minCoinsSO (coins, target) << "\n";
 
     return 0;
 }

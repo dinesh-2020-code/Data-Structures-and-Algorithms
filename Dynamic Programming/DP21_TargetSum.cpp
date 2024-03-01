@@ -103,6 +103,40 @@ int targetSumTab (vector<int> &arr, int diff) {
 }
 
 
+int targetSumSO (vector<int> &arr, int diff) {
+    int totalSum = 0; 
+    for (auto it : arr)
+        totalSum += it;
+
+    if ((totalSum - diff) < 0 || (totalSum - diff) % 2)
+        return 0;
+    int n = arr.size();
+    int k = (totalSum - diff) / 2;
+    vector<int> prev (k + 1, 0), curr (k + 1, 0);
+    
+    //write base cases in table
+    if (arr[0] == 0)   // case 1
+        prev[0] = 2;
+    else 
+        prev[0] = 1; // case 2
+    
+    if (arr[0] != 0 && arr[0] <= k)   // case 2 (arr[0] == curr_sum arr [5], curr_sum is also 5, so there is 1 way only)
+        prev[arr[0]] = 1;
+
+    for (int ind = 1; ind < n; ind++) {
+
+        for (int curr_sum = 0; curr_sum <= k; curr_sum++) {
+            int notPick = prev[curr_sum];
+            int pick = (arr[ind] <= curr_sum) ? prev[curr_sum - arr[ind]] : 0;
+            curr[curr_sum] = (pick + notPick) % mod; 
+        }
+        prev = curr; 
+    }
+    return prev[k]; 
+
+}
+
+
 int memoizedSol(vector<int> &arr, int target) {
     int n = arr.size();
     vector<vector<int>> dp(n, vector<int> (target + 1, -1));
@@ -116,6 +150,7 @@ int main() {
 
     cout << "The total no. of ways to form  " << target << " are: " << memoizedSol(arr, target) << "\n"; 
     cout << "The total no. of ways to form  " << target << " are: " << targetSumTab(arr, target) << "\n"; 
+    cout << "The total no. of ways to form  " << target << " are: " << targetSumSO(arr, target) << "\n"; 
 
     return 0;
 }

@@ -40,7 +40,7 @@ int unboundedKnapsackTab (int n, int cap, vector <int> &profit, vector <int> &we
     vector<vector<int>> dp (n, vector<int> (cap + 1, 0));
     //fill base case in DP table
     //ind is 0, capacity can range as 0 <= cap <= maxCapacity
-    for (int c = 0; c < cap; c++) {
+    for (int c = 0; c <= cap; c++) {
         if (c >= weight[0]) 
             dp[0][c] = (c / weight[0]) * profit[0];
     }
@@ -54,6 +54,30 @@ int unboundedKnapsackTab (int n, int cap, vector <int> &profit, vector <int> &we
         }
     }
     return dp[n - 1][cap];
+}
+
+
+int unboundedKnapsackSO (int n, int cap, vector <int> &profit, vector <int> &weight) {
+    // Time: O (n * cap)
+    // Aux Space: O (n * cap)
+    vector<int> prev (cap + 1, 0), curr (cap + 1, 0);
+    //fill base case in DP table
+    //ind is 0, capacity can range as 0 <= cap <= maxCapacity
+    for (int c = 0; c <= cap; c++) {
+        if (c >= weight[0]) 
+            prev[c] = (c / weight[0]) * profit[0];
+    }
+
+    //recursive cases
+    for (int ind = 1; ind < n; ind++) {
+        for (int c = 0; c <= cap; c++) {
+            int notTake = prev[c];
+            int take = (c >= weight[ind]) ? profit[ind] + curr[c - weight[ind]] : -1e9;
+            curr[c] = max (take, notTake);
+        }
+        prev = curr;
+    }
+    return prev[cap];
 }
 
 
@@ -73,5 +97,6 @@ int main() {
 
     cout << "Max Profit is: " << memoizedSol(n, capacity, profit, weight) << "\n";
     cout << "Max Profit is: " << unboundedKnapsackTab (n, capacity, profit, weight) << "\n";
+    cout << "Max Profit is: " << unboundedKnapsackSO  (n, capacity, profit, weight) << "\n";
 
 }

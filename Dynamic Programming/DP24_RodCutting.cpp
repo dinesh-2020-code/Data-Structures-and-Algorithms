@@ -60,9 +60,50 @@ int rodCutting (int ind, int rodLength, vector<int> &price, vector<vector<int>> 
 	return dp[ind][rodLength] = max(notTake, take);
 }
 
+
+int rodCuttingTab (int n, vector <int> &price) {
+    // create DP table
+    vector<vector<int> > dp (n, vector <int> (n + 1, 0));
+    //fill base case in DP table. 
+    // ind is 0, while rodLength varies
+    for (int l = 0; l <= n; l++)
+        dp[0][l] = l * price[0];
+    
+    //recursive cases
+    for (int ind = 1; ind < n; ind++) {
+        for (int l = 0; l <= n; l++) {
+            int notTake = dp[ind - 1][l];
+            int take = (l >= ind + 1) ? price[ind] + dp[ind - 1][l - (ind + 1)] : -1e9;
+            dp[ind][l] = max (take, notTake);
+        }
+    }
+    return dp[n - 1][n];
+}
+
+
+int rodCuttingSO (int n, vector <int> &price) {
+    // create DP table
+    vector <int> curr (n + 1, 0);
+    //fill base case in DP table. 
+    // ind is 0, while rodLength varies
+    for (int l = 0; l <= n; l++)
+        curr[l] = l * price[0];
+    
+    //recursive cases
+    for (int ind = 1; ind < n; ind++) {
+        for (int l = 0; l <= n; l++) {
+            int notTake = curr[l];
+            int take = (l >= ind + 1) ? price[ind] + curr[l - (ind + 1)] : -1e9;
+            curr[l] = max (take, notTake);
+        }
+    }
+    return curr[n];
+}
+
+
 int memoizedSol (int n, vector<int> &price)
 {
-	//ind : 0..n-1 and rodlength: 1..n
+	//ind : 0..n-1 and rod-length: 1..n
 	vector<vector<int>> dp (n, vector<int> (n + 1, -1));
 	return rodCutting (n - 1, n, price, dp);
 }
@@ -70,10 +111,16 @@ int memoizedSol (int n, vector<int> &price)
 
 int main () {
 
-    vector<int> price  = {3, 5, 8, 9, 10, 17, 17, 20};
-    int n = price.size();
+    // vector<int> price  = {3, 5, 8, 9, 10, 17, 17, 20};
+    // int n = price.size();
+    int n; cin >> n;
+    vector<int> price (n, 0);
+    for (int i = 0; i < n; i++)
+        cin >> price[i];
 
     cout << "Max Cost is: " << memoizedSol (n, price) << "\n";
+    cout << "Max Cost is: " << rodCuttingTab (n, price) << "\n";
+    cout << "Max Cost is: " << rodCuttingSO (n, price) << "\n";
 
     return 0;
 }

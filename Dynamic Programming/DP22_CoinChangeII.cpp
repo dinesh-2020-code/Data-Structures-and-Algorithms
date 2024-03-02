@@ -74,6 +74,33 @@ long long int countWaysTab (int n, int value, vector<int> &coins) {
     return dp[n - 1][value];
 }
 
+
+long long int countWaysSO (int n, int value, vector<int> &coins) {
+    //declare a DP array
+    vector <long long int> prev (value + 1, 0);
+    //write base cases in dp table
+    //case 1: if ind = 0, then if val % coins[0]  is divisible then fill 1, else fill 0
+    for (int v = 0; v <= value; v++) {
+        if (v % coins[0] == 0)
+            prev[v] = 1;
+    }
+
+    //write recursive cases in Dp table
+    for (int ind = 1; ind < n; ind++) {
+        vector<long long > curr (value + 1, 0);
+        for (int v = 0; v <= value; v++) {
+            //not Take case
+            long long notTake =prev[v];
+            //take case
+            long long take = (v >= coins[ind]) ? curr[v - coins[ind]] : 0;
+            curr[v] = take + notTake;
+        }
+        prev = curr;
+    }
+    return prev[value];
+}
+
+
 long long int memoisedSol(int n, int value, vector<int> &coins) {
 
     vector<vector<long long int>> dp (n, vector<long long int> (value + 1, -1));
@@ -89,6 +116,7 @@ int main() {
 
     cout << "Total no. of ways: " << memoisedSol  (n, value, denom) << "\n";
     cout << "Total no. of ways: " << countWaysTab (n, value, denom) << "\n";
+    cout << "Total no. of ways: " << countWaysSO  (n, value, denom) << "\n";
 
     return 0;
 }

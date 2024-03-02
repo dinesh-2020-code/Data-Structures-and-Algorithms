@@ -6,6 +6,11 @@
  * You need to figure out the total number of ways W, in which you can make a change for value V using 
  * coins of denominations from D. Print 0, if a change isn't possible
  * 
+ * Constraints:
+ * 1 <= N <= 15
+ * 1 <= nums[i] <= (2^31) - 1
+ * 1 <= value <= 10000
+ * 
  * Input:
  * 3    // n
  * 1 2 3  // Denominations
@@ -46,11 +51,33 @@ long long int countWays(int ind, int value, vector<int> coins, vector<vector<lon
 }
 
 
+long long int countWaysTab (int n, int value, vector<int> &coins) {
+    //declare a DP array
+    vector<vector<long long int>> dp(n, vector <long long int> (value + 1, 0));
+    //write base cases in dp table
+    //case 1: if ind = 0, then if val % coins[0]  is divisible then fill 1, else fill 0
+    for (int v = 0; v <= value; v++) {
+        if (v % coins[0] == 0)
+            dp[0][v] = 1;
+    }
+
+    //write recursive cases in Dp table
+    for (int ind = 1; ind < n; ind++) {
+        for (int v = 0; v <= value; v++) {
+            //not Take case
+            long long notTake = dp[ind - 1][v];
+            //take case
+            long long take = (v >= coins[ind]) ? dp[ind][v - coins[ind]] : 0;
+            dp[ind][v] = take + notTake;
+        }
+    }
+    return dp[n - 1][value];
+}
+
 long long int memoisedSol(int n, int value, vector<int> &coins) {
 
     vector<vector<long long int>> dp (n, vector<long long int> (value + 1, -1));
     return countWays(n - 1, value, coins, dp);
-
 }
 
 
@@ -60,7 +87,8 @@ int main() {
     int value = 1000;
     int n = denom.size();
 
-    cout << "Total no. of ways: " << memoisedSol(n, value, denom) << "\n";
+    cout << "Total no. of ways: " << memoisedSol  (n, value, denom) << "\n";
+    cout << "Total no. of ways: " << countWaysTab (n, value, denom) << "\n";
 
     return 0;
 }

@@ -78,10 +78,32 @@ int matrixChainMultiply (int i, int j, vector<int> &arr, vector<vector<int>> &dp
 
 }
 
+
+int matrixChainMultiplyTab (int N, vector<int> &arr) {
+    vector<vector<int>> dp (N, vector<int> (N, 0));
+    //fill base case in dp table
+    for (int i = 0; i < N; i++) {
+        dp[i][i] = 0;
+    }
+
+    for (int i = N - 1; i >= 1; i--) {
+        for (int j = i + 1; j < N; j++) {
+            int mini = 1e9;
+            for (int k = i; k < j; k++) {
+                int steps = arr[i-1] * arr[k] * arr[j] + dp[i][k] + dp[k + 1][j];
+                if (steps < mini)
+                    mini = steps;
+            }
+            dp[i][j] = mini;
+        }
+    }
+    return dp[1][N - 1];
+}
+
+
 int memoizedSol(int N, vector<int> &arr) {
     vector<vector<int>> dp (N, vector<int> (N, -1));
     return matrixChainMultiply(1, N - 1, arr, dp);
-    
 }
 
 
@@ -90,6 +112,7 @@ int main() {
     int N = 4;
     vector<int> arr = {4, 5, 3, 2};
     cout << memoizedSol (N, arr) << endl;
+    cout << matrixChainMultiplyTab(N, arr) << endl;
     
     return 0;
 }

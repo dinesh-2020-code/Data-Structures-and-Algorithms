@@ -63,6 +63,7 @@ void printLCS (string &s1, string &s2) {
     int index = len - 1;
     int ind1 = m, ind2 = n;
 
+    // O(m + n) Time for backtracking 
     while (ind1 > 0 && ind2 > 0) {
         if (s1[ind1-1] == s2[ind2-1]) {
             ans[index--] = s1[ind1-1];

@@ -36,6 +36,8 @@
 using namespace std;
 
 
+// Time Complexity: O (m * n)
+// Aux Space: O (m * n) + O (m + n) {recursive stack space}
 int lcs (int ind1, int ind2, string &s1, string &s2, vector<vector<int>> &dp) {
     //base case
     if (ind1 < 0 || ind2 < 0)
@@ -47,6 +49,36 @@ int lcs (int ind1, int ind2, string &s1, string &s2, vector<vector<int>> &dp) {
 
     //not matching
     return max (lcs (ind1 - 1, ind2, s1, s2, dp), lcs (ind1, ind2 - 1, s1, s2, dp));
+}
+
+
+int lcsTab(string &s1, string &s2) {
+
+    int m = s1.size(); 
+    int n = s2.size();
+
+    //shifting the index by 1 to the right to make tabulation easy as in base case we have neg index
+    vector <vector<int> > dp (m + 1, vector <int> (n + 1, 0));
+    //fill base case
+    // by shifting the index by 1 to right will change the base cases as 
+    // ind1 == 0 || ind2 == 0 => return 0;
+    // ind1 == 0, ind2 can be anything from 0..n
+    for (int ind2 = 0; ind2 <= n; ind2++) {
+        dp[0][ind2] = 0;
+    }
+    //if ind2 == 0, ind1 can be anything from 0..m
+    for (int ind1 = 0; ind1 <= m; ind1++) {
+        dp[ind1][0] = 0;
+    }
+    for (int ind1 = 1; ind1 <= m; ind1++) {
+        for (int ind2 = 1; ind2 <= n; ind2++) {
+            if (s1[ind1-1] == s2[ind2-1])
+                dp[ind1][ind2] =  1 + dp[ind1-1][ind2-1];
+            else
+                dp[ind1][ind2] = max(dp[ind1-1][ind2], dp[ind1][ind2-1]);
+        }
+    }
+    return dp[m][n];
 }
 
 
@@ -64,6 +96,7 @@ int main() {
     cin >> s1 >> s2;
 
     int m = s1.size(), n = s2.size();
-    cout << memoizedSol(s1, s2);
+    cout << memoizedSol(s1, s2) << "\n";
+    cout << lcsTab(s1, s2) << "\n";
     return 0;
 }

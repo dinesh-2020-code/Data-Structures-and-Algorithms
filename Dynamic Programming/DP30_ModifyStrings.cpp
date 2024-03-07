@@ -16,6 +16,13 @@
  * In the second operation remove 's1[1]', after this operation 's1' becomes "ac".
  * In the third operation add 'n' in 's1[1]', after this operation 's1' becomes "anc".
  * 
+ * Intuition:  Keep the longest common subsequence intact in the string s1 and insert/delete the other chars
+ * for ex: 
+ *      lcs in "abcd" and "anc" is "ac"
+ *      other chars in "abcd" are 'b' and 'd', so remove 'b' and 'd' counts to 2 operations
+ *      other chars in "anc" is 'n', add 'n' to s1 counts to 1 operation
+ *      so s1 will become "anc" thereby counting 3 total operations
+ * 
 */
 
 #include <iostream>
@@ -68,6 +75,7 @@ int main() {
     string s1, s2;
     cout << "Enter two strings separated by space: \n";
     cin >> s1 >> s2;
-    cout << minOperationsReqd(s1, s2) << endl;
+    cout << "Min no. of Insertions/Deletions required to convert " << s1 << " to " << s2 << " is/are: "
+         << minOperationsReqd(s1, s2) << endl;
     return 0;
 }

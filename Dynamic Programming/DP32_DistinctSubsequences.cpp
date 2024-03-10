@@ -96,13 +96,6 @@ int distinctSubsequenceSO(string &s1, string &s2) {
     int n = s2.length();
 
     vector <int> prev (n + 1, 0), curr (n + 1, 0);
-
-    //write base case in dp table
-	// case 1: if second string exhausted, i.e., j == 0
-	
-	//case 2: If first string exhausted, i.e., i == 0, return 0
-
-	//write recursive cases
     prev[0] = 1; 
 	for (int i = 1; i <= m; i++) 
 	{
@@ -124,15 +117,7 @@ int distinctSubsequenceSOII(string &s1, string &s2) {
     // space optimization to single vector
     int m = s1.length();
     int n = s2.length();
-
     vector <int> prev (n + 1, 0);
-
-    //write base case in dp table
-	// case 1: if second string exhausted, i.e., j == 0
-	
-	//case 2: If first string exhausted, i.e., i == 0, return 0
-
-	//write recursive cases
     prev[0] = 1;
 	for (int i = 1; i <= m; i++) 
 	{

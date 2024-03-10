@@ -120,6 +120,32 @@ int distinctSubsequenceSO(string &s1, string &s2) {
 }
 
 
+int distinctSubsequenceSOII(string &s1, string &s2) {
+    // space optimization to single vector
+    int m = s1.length();
+    int n = s2.length();
+
+    vector <int> prev (n + 1, 0);
+
+    //write base case in dp table
+	// case 1: if second string exhausted, i.e., j == 0
+	
+	//case 2: If first string exhausted, i.e., i == 0, return 0
+
+	//write recursive cases
+    prev[0] = 1;
+	for (int i = 1; i <= m; i++) 
+	{
+		for (int j = n; j >= 1; j--)
+		{
+			if (s1[i-1] == s2[j-1])
+				prev[j] = (prev[j-1] + prev[j]) % MOD;
+		}
+	}
+	return prev[n];
+}
+
+
 int memoizedSol(string &s1, string &s2) {
     int m = s1.length();
     int n = s2.length();
@@ -135,5 +161,6 @@ int main() {
     cout << memoizedSol(s1, s2) << "\n";
     cout << distinctSubsequenceTab(s1, s2) << "\n";
     cout << distinctSubsequenceSO(s1, s2) << "\n";
+    cout << distinctSubsequenceSOII(s1, s2) << "\n";
     return 0;
 }

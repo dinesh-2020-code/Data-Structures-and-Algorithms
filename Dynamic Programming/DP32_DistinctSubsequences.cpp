@@ -91,6 +91,35 @@ int distinctSubsequenceTab(string &s1, string &s2) {
 }
 
 
+int distinctSubsequenceSO(string &s1, string &s2) {
+    int m = s1.length();
+    int n = s2.length();
+
+    vector <int> prev (n + 1, 0), curr (n + 1, 0);
+
+    //write base case in dp table
+	// case 1: if second string exhausted, i.e., j == 0
+	
+	//case 2: If first string exhausted, i.e., i == 0, return 0
+
+	//write recursive cases
+    prev[0] = 1; 
+	for (int i = 1; i <= m; i++) 
+	{
+        curr[0] = 1;
+		for (int j = 1; j <= n; j++)
+		{
+			if (s1[i-1] == s2[j-1])
+				curr[j] = (prev[j-1] + prev[j]) % MOD;
+			else
+				curr[j] = prev[j] % MOD;
+		}
+        prev = curr;
+	}
+	return prev[n];
+}
+
+
 int memoizedSol(string &s1, string &s2) {
     int m = s1.length();
     int n = s2.length();
@@ -99,10 +128,12 @@ int memoizedSol(string &s1, string &s2) {
     return distinctSubsequence(m - 1, n - 1, s1, s2, dp);
 }
 
+
 int main() {
 
     string s1 = "babgbag", s2 = "bag";
     cout << memoizedSol(s1, s2) << "\n";
     cout << distinctSubsequenceTab(s1, s2) << "\n";
+    cout << distinctSubsequenceSO(s1, s2) << "\n";
     return 0;
 }

@@ -95,6 +95,34 @@ int editDistancesTab (string &s1, string &s2) {
 }
 
 
+int editDistancesSO (string &s1, string &s2) {
+    int m = s1.length();
+    int n = s2.length();
+    vector <int> prev (n + 1, 0), curr(n + 1, 0);
+
+    // case1: string s1 exhausted (i == 0), 0 <= j <= n
+    for (int j = 0; j <= n; j++) 
+        prev[j] = j;
+    
+    for (int i = 1; i <= m; i++) {
+        curr[0] = i;
+        for (int j = 1; j <= n; j++) {
+            // case1: if both chars are matching
+            if (s1[i-1] == s2[j-1]) 
+                curr[j] = prev[j-1];
+            else {
+                int ins = 1 + curr[j-1];
+                int del = 1 + prev[j];
+                int rep = 1 + prev[j-1];
+                curr[j] = min (ins, min (del, rep));
+            }
+        }
+        prev = curr;
+    }
+    return prev[n];
+}
+
+
 int memoisedSol(string &s1, string &s2) {
 
     int m = s1.size();
@@ -113,6 +141,7 @@ int main () {
 
     cout << "Min operations required to convert string '"<< s1 << "' to string '" << s2 << "' is: " << memoisedSol (s1, s2) << "\n";
     cout << "Min operations required to convert string '"<< s1 << "' to string '" << s2 << "' is: " << editDistancesTab (s1, s2) << "\n";
+    cout << "Min operations required to convert string '"<< s1 << "' to string '" << s2 << "' is: " << editDistancesSO (s1, s2) << "\n";
 
     return 0;
 }

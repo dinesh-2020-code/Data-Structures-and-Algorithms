@@ -62,6 +62,39 @@ int editDistances (int i, int j, string &s1, string &s2, vector<vector<int>> &dp
 }
 
 
+int editDistancesTab (string &s1, string &s2) {
+    //define dp table of m + 1 and n + 1 length
+    //using 1-based indexing for strings
+    int m = s1.length();
+    int n = s2.length();
+    vector <vector <int>> dp (m + 1, vector <int> (n + 1, 0));
+
+    //write base cases in dp table
+    // case1: string s1 exhausted (i == 0), 0 <= j <= n
+    for (int j = 0; j <= n; j++) 
+        dp[0][j] = j;
+    
+    //case2: string s2 exhausted (j == 0), 0 <= i <= m
+    for (int i = 0; i <= m; i++)
+        dp[i][0] = i;
+    
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            // case1: if both chars are matching
+            if (s1[i-1] == s2[j-1]) 
+                dp[i][j] = dp[i-1][j-1];
+            else {
+                int ins = 1 + dp[i][j-1];
+                int del = 1 + dp[i-1][j];
+                int rep = 1 + dp[i-1][j-1];
+                dp[i][j] = min (ins, min (del, rep));
+            }
+        }
+    }
+    return dp[m][n];
+}
+
+
 int memoisedSol(string &s1, string &s2) {
 
     int m = s1.size();
@@ -78,7 +111,8 @@ int main () {
     cout << "Enter two strings separated by spaces\n";
     cin >> s1 >> s2;
 
-    cout << "Min operations required to convert string '"<< s1 << "' to string '" << s2 << "' is: " << memoisedSol(s1, s2);
+    cout << "Min operations required to convert string '"<< s1 << "' to string '" << s2 << "' is: " << memoisedSol (s1, s2) << "\n";
+    cout << "Min operations required to convert string '"<< s1 << "' to string '" << s2 << "' is: " << editDistancesTab (s1, s2) << "\n";
 
     return 0;
 }

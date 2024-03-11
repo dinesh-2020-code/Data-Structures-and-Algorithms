@@ -1,5 +1,27 @@
 /**
  * Problem: Edit Distance
+ * Problem Statement:
+ * Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
+ * You have the following three operations permitted on a word:
+ *      Insert a character
+ *      Delete a character
+ *      Replace a character
+ * 
+ * Input1: word1 = "horse", word2 = "ros"
+ * Output: 3
+ * Explanation: 
+ *      horse -> rorse (replace 'h' with 'r')
+ *      rorse -> rose (remove 'r')
+ *      rose -> ros (remove 'e')
+ * 
+ * Input2: word1 = "intention", word2 = "execution"
+ * Output: 5
+ * Explanation: 
+ *      intention -> inention (remove 't')
+ *      inention -> enention (replace 'i' with 'e')
+ *      enention -> exention (replace 'n' with 'x')
+ *      exention -> exection (replace 'n' with 'c')
+ *      exection -> execution (insert 'u')
  * 
 */
 
@@ -56,7 +78,7 @@ int main () {
     cout << "Enter two strings separated by spaces\n";
     cin >> s1 >> s2;
 
-    cout << memoisedSol(s1, s2);
+    cout << "Min operations required to convert string '"<< s1 << "' to string '" << s2 << "' is: " << memoisedSol(s1, s2);
 
     return 0;
 }

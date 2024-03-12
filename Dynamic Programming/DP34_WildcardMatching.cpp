@@ -70,6 +70,43 @@ bool wildcardMatching (int i, int j, string &patt, string &text, vector<vector<i
 }
 
 
+bool wildcardMatchingTab(string &patt, string &text) {
+   int m = patt.size();
+   int n = text.size();
+   vector<vector<bool>> dp (m + 1, vector <bool> (n + 1, false));
+   //write base cases in dp table
+   //case 1: i == 0 and j == 0
+   dp[0][0] = true;
+
+   //case 2: (i == 0 && j > 0)
+   for (int j = 1; j <= n; j++)
+      dp[0][j] = false;
+   
+   //case 3: (j == 0 && i > 0)
+   for (int i = 1; i <= m; i++) { 
+      bool flag = true;
+      for (int k = 1; k <= i; k++) {
+         if (patt[k - 1] != '*') {
+            flag = false;
+            break;
+         }
+      }
+      dp[i][0] = flag;
+   }
+
+   for (int i = 1; i <= m; i++) {
+      for (int j = 1; j <= n; j++) {
+         if (patt[i-1] == text[j-1] || patt[i-1] == '?')
+            dp[i][j] = dp[i-1][j-1];
+         else if (patt[i-1] == '*')
+            dp[i][j] = dp[i-1][j] || dp[i][j-1];
+         else
+            dp[i][j] = false;
+      }
+   }
+   return dp[m][n];
+}
+
 bool memo(string pattern, string text) {
    int n = text.size();
    int m = pattern.size();
@@ -86,5 +123,6 @@ int main() {
     cin >> pattern >> text;
 
     cout << memo(pattern, text) << endl;
+    cout << wildcardMatchingTab(pattern, text) << "\n";
     return 0;
 }

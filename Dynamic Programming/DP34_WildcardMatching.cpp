@@ -107,6 +107,43 @@ bool wildcardMatchingTab(string &patt, string &text) {
    return dp[m][n];
 }
 
+
+bool wildcardMatchingSO (string &patt, string &text) {
+   int m = patt.size();
+   int n = text.size();
+   vector <bool> prev(n + 1, false), curr (n + 1, false);
+   //write base cases in dp table
+   //case 1: i == 0 and j == 0
+   prev[0] = true;
+
+   //case 2: (i == 0 && j > 0)
+   for (int j = 1; j <= n; j++)
+      prev[j] = false;
+
+   for (int i = 1; i <= m; i++) {
+       //base case 3: (j == 0 && i > 0)
+      bool flag = true;
+      for (int k = 1; k <= i; k++) {
+         if (patt[k - 1] != '*') {
+            flag = false;
+            break;
+         }
+      }
+      curr[0] = flag; //setting 0th col for every row.
+      for (int j = 1; j <= n; j++) {
+         if (patt[i-1] == text[j-1] || patt[i-1] == '?')
+            curr[j] = prev[j-1];
+         else if (patt[i-1] == '*')
+            curr[j] = prev[j] || curr[j-1];
+         else
+            curr[j] = false;
+      }
+      prev = curr;
+   }
+   return prev[n];
+}
+
+
 bool memo(string pattern, string text) {
    int n = text.size();
    int m = pattern.size();
@@ -124,5 +161,6 @@ int main() {
 
     cout << memo(pattern, text) << endl;
     cout << wildcardMatchingTab(pattern, text) << "\n";
+    cout << wildcardMatchingSO (pattern, text) << "\n";
     return 0;
 }

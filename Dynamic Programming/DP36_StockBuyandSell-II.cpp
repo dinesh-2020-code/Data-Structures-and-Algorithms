@@ -90,12 +90,40 @@ long maxProfitTab (long prices[], int n) {
 }
 
 
+long maxProfitSO (long prices[], int n) {
+    long next[2], curr[2];
+    memset(next, 0, sizeof(next));
+    memset(curr, 0, sizeof(curr));
+    long profit = -1e9;
+    for (int ind = n - 1; ind >= 0; ind--) {
+        for (int buy = 1; buy >= 0; buy--) {
+            if (buy) {
+                long buy   = -prices[ind] + next[0];  //take case
+                long notBuy=  0 + next[1];            //not-take case
+                profit = max(buy, notBuy);
+            }
+            else { //case2: Sell stock
+                long sell    = prices[ind] + next[1];
+                long notSell = 0 + next[0];
+                profit = max(sell, notSell);
+            }
+            curr[buy] = profit;
+        }
+        //assign values of curr[] to next[]
+        for (int x = 0; x < 2; x++)
+            next[x] = curr[x];
+    }
+    return next[1]; //till index 0 (starting from index n-1), how much profit we can get if we are not holding any stocks previously
+}
+
+
 int main() {
 
     long prices[] = {7, 1, 5, 3, 6, 4};
     int n = sizeof(prices) / sizeof(prices[0]);
     cout << "Max Profit: " << memoizedSol(prices, n) << "\n";
     cout << "Max Profit: " << maxProfitTab(prices, n) << "\n";
+    cout << "Max Profit: " << maxProfitSO(prices, n) << "\n";
     return 0;
 }
 /**
@@ -103,5 +131,5 @@ int main() {
  *      Simple Recursive: Time: O(2^n) and Space: O(n) Aux stack space
  *      memoisedSol(prices, n) -> Time: O(n * 2), Aux Space: O(n) {aux stack space} + O(n * 2) dp table
  *      maxProfitTab(prices, n) -> Time: O(n * 2), Aux space: O(n * 2) dp table
- * 
+ *      maxProfitSO(prices, n) -> Time: O(n * 2), Aux space: O(1)
 */

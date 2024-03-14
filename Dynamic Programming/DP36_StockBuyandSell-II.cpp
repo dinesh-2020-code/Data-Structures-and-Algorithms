@@ -62,12 +62,46 @@ long memoizedSol(long prices[], int n) {
 }
 
 
+long maxProfitTab (long prices[], int n) {
+    long dp[n + 1][2];
+    memset(dp, 0, sizeof(dp));
+
+    //fill base case in dp table
+    //base case: if index is n, return 0
+    dp[n][0] = dp[n][1] = 0;
+    long profit = -1e9;
+    for (int ind = n - 1; ind >= 0; ind--) {
+        for (int buy = 1; buy >= 0; buy--) {
+            if (buy) {
+                long buy   = -prices[ind] + dp[ind + 1][0]; //take case
+                long notBuy=  0 + dp[ind + 1][1];            //not-take case
+                profit = max(buy, notBuy);
+            }
+            else { //case2: Sell stock
+                long sell    = prices[ind] + dp[ind + 1][1];
+                long notSell = 0 + dp[ind + 1][0];
+                profit = max(sell, notSell);
+            }
+            dp[ind][buy] = profit;
+        }
+    }
+    return dp[0][1];
+    
+}
 
 
 int main() {
 
     long prices[] = {7, 1, 5, 3, 6, 4};
     int n = sizeof(prices) / sizeof(prices[0]);
-    cout << "Max Profit: " << memoizedSol(prices, n);
+    cout << "Max Profit: " << memoizedSol(prices, n) << "\n";
+    cout << "Max Profit: " << maxProfitTab(prices, n) << "\n";
     return 0;
 }
+/**
+ * Asymptotic analysis
+ *      Simple Recursive: Time: O(2^n) and Space: O(n) Aux stack space
+ *      memoisedSol(prices, n) -> Time: O(n * 2), Aux Space: O(n) {aux stack space} + O(n * 2) dp table
+ *      maxProfitTab(prices, n) -> Time: O(n * 2), Aux space: O(n * 2) dp table
+ * 
+*/

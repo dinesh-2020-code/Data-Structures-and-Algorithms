@@ -42,6 +42,29 @@ int maxProfit(int ind, int  buy, int n, vector<int> &prices, vector<vector<int>>
 }
 
 
+int maxProfitTab(vector<int> &prices) {
+    int n = prices.size();
+    vector<vector<int>> dp (n + 2, vector<int> (2, 0) );
+    int profit = -1e9;
+    for (int ind = n-1; ind >= 0; ind--) {
+        for (int buy = 1; buy >= 0; buy--) {
+            if (buy == 1) {
+                int take = -prices[ind] + dp[ind+1][0];
+                int notTake = 0 + dp[ind+1][1];
+                profit = max(take, notTake);
+            }
+            else {
+                int sell = prices[ind] + dp[ind + 2][1];
+                int notSell = dp[ind+1][0];
+                profit = max(sell, notSell);
+            }
+            dp[ind][buy] = profit;
+        }
+    }
+    return dp[0][1];
+}
+
+
 int memoizedSol(vector<int> &prices) {
     int n = prices.size();
     vector<vector<int>> dp(n, vector<int> (2, -1));
@@ -53,6 +76,7 @@ int main() {
 
     vector<int> prices = {4, 9, 0, 4, 10};
     int n = prices.size(); 
-    cout << "Max Profit: " << memoizedSol(prices);
+    cout << "Max Profit: " << memoizedSol(prices) << "\n";
+    cout << "Max Profit: " << maxProfitTab(prices) << "\n";
     return 0;
 }

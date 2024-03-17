@@ -87,6 +87,47 @@ long maxProfitTab(long prices[], int n) {
 }
 
 
+long maxProfitSO(long prices[], int n) {
+    // Aux Space: O(1)
+    vector<vector <int>> next (2, vector<int> (3, 0));
+    vector<vector <int>> curr (2, vector<int> (3, 0));
+    
+    //writing base cases
+    //base case: if cap == 0, return 0
+    // index can be anything (0 -> n-1) and buy [0, 1]
+    //No need to write base cases as next is already filled with 0
+    // for (int ind = 0; ind < n; ind++) 
+    //     for (int buy = 0; buy < 2; buy++) 
+    //         dp[ind][buy][0] = 0;
+
+    // //case 2: ind == n 
+    // for (int buy = 0; buy < 2; buy++)
+    //     for (int cap = 0; cap < 3; cap++) 
+    //         dp[n][buy][cap] = 0;
+    
+    long profit = -1e9;
+    for (int ind = n - 1; ind >= 0; ind--) {
+        for (int buy = 1; buy >= 0; buy--) {
+            for (int cap = 2; cap >= 1; cap--) {  //cap ranges from [1, 2]because for cap = 0, ans is 0 (base case)
+                if (buy) {
+                    long buy   = -prices[ind] + next[0][cap]; //take case
+                    long notBuy= 0 + next[1][cap];           //not-take case
+                    profit = max(buy, notBuy);
+                }
+                else { //case2: Sell stock
+                    long sell    = prices[ind] + next[1][cap - 1];
+                    long notSell = 0 + next[0][cap];
+                    profit = max(sell, notSell);
+                }
+                curr[buy][cap] = profit;
+            }
+        }
+        next = curr;
+    }
+    return next[1][2];
+}
+
+
 long memoizedSol(long prices[], int n) {
     // 0 <= ind < n
     // buy can have two states, buy = [0, 1], 0 means can't buy, 1 means can buy
@@ -104,5 +145,6 @@ int main() {
     int n = sizeof(prices) / sizeof(prices[0]);
     cout << "Max Profit: " << memoizedSol(prices, n) << "\n";
     cout << "Max Profit: " << maxProfitTab(prices, n) << "\n";
+    cout << "Max Profit: " << maxProfitSO(prices, n) << "\n";
     return 0;
 }

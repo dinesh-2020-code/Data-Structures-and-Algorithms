@@ -38,6 +38,34 @@ int longestIncreasingSubsequence(int ind, int prev, int n, vector<int> &arr) {
 }
 
 
+int longestIncreasingSubsequenceMemo(int ind, int prev, int n, vector<int> &arr,
+                                    vector<vector<int>> &dp) {
+    // We will shift each index by 1, to deal with prev = -1 case
+    // ind [1..n] and prev = 0, initially
+    //base cases
+     // We will shift each index by 1, to deal with prev = -1 case
+    // ind [1..n] and prev = 0, initially
+    //base cases
+    if (ind == n+1) {
+        return 0;
+    }
+
+    if (dp[ind][prev] != -1)
+        return dp[ind][prev];
+    //Not take case
+    int notTake = 0 + longestIncreasingSubsequenceMemo(ind + 1, prev, n, arr, dp);
+    //Take case
+    int take = -1e9;
+    if (prev == 0 || arr[ind - 1] > arr[prev - 1])
+        take = 1 + longestIncreasingSubsequenceMemo(ind + 1, ind, n, arr, dp);
+
+    return dp[ind][prev] = max(take, notTake);
+
+    // Time: O(n)
+    // Aux Space: O (n) + O(n * n)
+}
+
+
 int memoizedSol(vector<int> &arr) {
     /**
      * This function returns the length of the longest increasing subsequence
@@ -46,8 +74,9 @@ int memoizedSol(vector<int> &arr) {
      * return: size of the longest increasing array
     */
     int n = arr.size();
-    
-    return longestIncreasingSubsequence(0, -1, n, arr);
+    vector<vector<int>> dp(n + 1, vector<int> (n + 1, -1));
+    // return longestIncreasingSubsequence(0, -1, n, arr);
+    return longestIncreasingSubsequenceMemo(1, 0, n, arr, dp);
 }
 
 int main() {

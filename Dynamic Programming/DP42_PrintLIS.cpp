@@ -4,6 +4,17 @@
  * 
  * 
  * Efficient Approach
+ * [5, 4, 11, 1, 16, 8]
+ * 
+ * we will declare a dp array of length n, such that dp[i] signifies the length of 
+ * the longest longest increasing subsequence that ends at index i
+ * 
+ * for ex: arr[] = {5, 4, 11, 1, 16, 8}
+ *          dp[] = {1, 1,  2, 1,  3, 2}
+ *  ans would be max(dp[])
+ * 
+ * Initially dp [] will be filled with all 1, because every element can be subsequence of length 1
+ * 
 */
 
 #include <iostream>
@@ -87,12 +98,29 @@ int memoizedSol(vector<int> &arr) {
 }
 
 
+//Efficient Sol
+int LIS (vector<int> &arr) {
+    int n = arr.size();
+    vector<int> dp(n, 1);
+    int ans = 1;
+    for (int ind = 0; ind < n; ind++) {
+        for (int prev = 0; prev < ind; prev++) {
+            if (arr[prev] < arr[ind]) 
+                dp[ind] = max(1 + dp[prev], dp[ind]);
+        }
+        ans = max(ans, dp[ind]);
+    }
+    return ans;
+}
+
+
 int main() {
 
     vector<int> arr = {10, 9, 2, 5, 3, 7, 101, 18};
     cout << "Length of Longest Increasing Subsequence is(Memo): "<< memoizedSol(arr) << "\n";
     cout << "Length of Longest Increasing Subsequence is(Tab): "<< longestIncreasingSubsequenceTab(arr) << "\n";
     cout << "Length of Longest Increasing Subsequence is(SO): "<< longestIncreasingSubsequenceSO(arr) << "\n";
+    cout << "Length of Longest Increasing Subsequence is: "<< LIS(arr) << "\n";
     return 0;
 }
 

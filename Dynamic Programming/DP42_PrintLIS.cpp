@@ -15,10 +15,20 @@
  * 
  * Initially dp [] will be filled with all 1, because every element can be subsequence of length 1
  * 
+ * For printing the LIS, we will take another array named hash[], such that hash[i] stores the index 
+ * of the prev element that can be taken in the sequence to make it increasing.
+ * 
+ * for ex: arr[] = {5, 4, 11, 1, 16, 8}
+ *          dp[] = {1, 1, 2, 1, 3, 2}
+ *         hash[]= {0, 1, 0, 3, 2, 0}
+ * 
+ * Then start with the hash[i] such that dp[i] is max 
+ *  
 */
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -101,22 +111,42 @@ int memoizedSol(vector<int> &arr) {
 //Efficient Sol
 int LIS (vector<int> &arr) {
     int n = arr.size();
-    vector<int> dp(n, 1);
+    vector<int> dp(n, 1), hash(n);
     int ans = 1;
+    int lastIndex = 0;
     for (int ind = 0; ind < n; ind++) {
+        hash[ind] = ind;
         for (int prev = 0; prev < ind; prev++) {
-            if (arr[prev] < arr[ind]) 
-                dp[ind] = max(1 + dp[prev], dp[ind]);
+            if (arr[prev] < arr[ind] && 1 + dp[prev] > dp[ind]) {
+                dp[ind] = 1 + dp[prev];
+                hash[ind] = prev;
+
+            }
         }
-        ans = max(ans, dp[ind]);
+        if (dp[ind] > ans) {
+            ans = dp[ind]; 
+            lastIndex = ind;
+        }
     }
+    vector<int> lis(ans);
+    lis[0] = arr[lastIndex];
+    int ind = 1;
+    while (hash[lastIndex] != lastIndex) {
+        lastIndex = hash[lastIndex];
+        lis[ind++] = arr[lastIndex];
+    }
+    reverse(lis.begin(), lis.end());
+    for (auto it : lis) 
+        cout << it << " "; 
+    cout << endl; 
     return ans;
 }
 
 
 int main() {
 
-    vector<int> arr = {10, 9, 2, 5, 3, 7, 101, 18};
+    // vector<int> arr = {10, 9, 2, 5, 3, 7, 101, 18};
+    vector<int> arr = {5, 4, 11, 1, 16, 8};
     cout << "Length of Longest Increasing Subsequence is(Memo): "<< memoizedSol(arr) << "\n";
     cout << "Length of Longest Increasing Subsequence is(Tab): "<< longestIncreasingSubsequenceTab(arr) << "\n";
     cout << "Length of Longest Increasing Subsequence is(SO): "<< longestIncreasingSubsequenceSO(arr) << "\n";

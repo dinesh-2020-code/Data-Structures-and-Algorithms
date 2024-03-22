@@ -8,6 +8,7 @@
 */
 
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
@@ -21,6 +22,7 @@ int fib(int n, int dp[]) {
     dp[n] = fib(n - 1, dp) + fib(n - 2, dp);
 }
 
+
 int fib_tab(int n) {
     int dp[n + 1];
     dp[0] = 0; dp[1] = 1; // write base case in the table
@@ -30,6 +32,7 @@ int fib_tab(int n) {
     }
     return dp[n];
 }
+
 
 int fib_space_optimization(int n) {
      //Time : O(n), space : O(1)
@@ -41,9 +44,12 @@ int fib_space_optimization(int n) {
      }
      return prev; 
 }
+
+
 int main() 
 {
     int number; 
+    cout << "Enter n:\n";
     cin >> number;
     int dp[number + 1];
     memset(dp, -1, sizeof(dp));

@@ -10,6 +10,21 @@
  * Output: 2 {{1, 3, 4, 7}, {1, 3, 5, 7}}
  * 
  * 
+ * Efficient Approach: 
+ *     We will make use of LIS algorithm
+ *     We will find the LIS array (say dp) where dp[i] tells that length of Longest Increasing subsequence
+ *     starting from index 0 till index '1', i.e., [0..i]
+ *     Also we will make use of another array cnt, where cnt[i] tells that total number of subsequences from
+ *     index 0 till index 'i' with maximum length of dp[i].
+ * 
+ *      for instance
+ *      ind = {0, 1, 2, 3, 4, 5, 6,  7, 8, 9}
+ *      arr = {1, 5, 4, 3, 2, 6, 7, 10, 8, 9}
+ *      dp  = {1, 2, 2, 2, 2, 3, 4,  5, 5, 6}
+ *      cnt = {1, 1, 1, 1, 1, 4, 4,  4, 4, 4}
+ * 
+ *      Length of longest increasing subsequence here is max (dp[i]s) which is 6 here
+ *  
 */
 
 #include <iostream>

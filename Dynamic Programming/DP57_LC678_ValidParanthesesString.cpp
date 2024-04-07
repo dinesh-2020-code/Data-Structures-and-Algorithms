@@ -22,6 +22,7 @@
  * Input: s = "((*)(*))()*(*)****((*(*)())*()((()**(**)"    Output: True
  * Input: s = "(*()(**(*)())*))())())*)()()*(((*)()))(**()*)**(*"       Output: True
  * Input: s = "(((((()*)(*)*))())())(()())())))((**)))))(()())()"       Output: False
+ * Input: s = "(((((*)))**" Output: True
 */
 
 #include <iostream>
@@ -152,7 +153,8 @@ bool twoStacksSol(string &s)
 int main()
 {
 
-    string s = "(((((()*)(*)*))())())(()())())))((**)))))(()())()";
+    // string s = "(((((()*)(*)*))())())(()())())))((**)))))(()())()";
+    string s = "(((((*)))**";
     cout << "isValidString: " << memo(s) << endl;
     cout << "isValidString: " << checkValidStringTab(s) << endl;
     cout << "isValidString: " << twoStacksSol(s) << endl;

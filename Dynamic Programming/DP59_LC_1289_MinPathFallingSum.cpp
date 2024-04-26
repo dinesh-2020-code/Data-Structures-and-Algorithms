@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <vector>
+#include <limits.h>
 
 using namespace std;
 
@@ -57,6 +58,37 @@ int minFallingPathSum(vector<vector<int>> &grid)
 }
 
 
+int minFallingPathSumTab(vector<vector<int>> &grid) {
+
+    int n = grid.size();
+    vector<vector<int>> memo(n, vector<int>(n, 0));
+
+    //fill base case in dp table
+    for (int col = 0; col < n; col++) {
+        memo[n-1][col] = grid[n-1][col];
+    }
+
+    for (int row = n - 2; row >= 0; row--) {
+        for (int col = 0; col < n; col++) {
+            int nextMin = INT_MAX;
+            for (int nextRowCol = 0; nextRowCol < n; nextRowCol++) {
+
+                if (nextRowCol != col) {
+                    nextMin = min (nextMin, memo[row + 1][nextRowCol]);
+                }
+            }
+            memo[row][col] = nextMin + grid[row][col];
+            
+        }        
+    }
+    int ans = INT_MAX;
+    for (int col = 0; col < n; col++) {
+        ans = min(ans, memo[0][col]);
+    }
+    return ans;
+}
+
+
 int main() {
 
     vector<vector<int> > grid = {
@@ -66,6 +98,7 @@ int main() {
     };
 
     cout << "Min path falling sum is: " << minFallingPathSum(grid) << "\n";
+    cout << "Min path falling sum is: " << minFallingPathSumTab(grid) << "\n";
 
     return 0;
 }

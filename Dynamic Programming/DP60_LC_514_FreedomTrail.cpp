@@ -27,3 +27,56 @@
  * So the final output is 4.
  * 
 */
+
+#include <iostream>
+#include <vector>
+#include <climits>
+
+using namespace std;
+
+int minSteps(int ringIdx, int currIdx, int ringSize)
+{
+    int distance = abs(currIdx - ringIdx);
+    int wrapDistance = ringSize - distance;
+    return min(distance, wrapDistance);
+}
+
+
+int solve(int ringIdx, int keyIdx, string &ring, string &key, vector<vector<int>> &memo)
+{
+
+    if (keyIdx >= key.size())
+    { // key exhausted
+        return 0;
+    }
+    if (memo[ringIdx][keyIdx] != -1)
+        return memo[ringIdx][keyIdx];
+    int result = INT_MAX;
+    for (int i = 0; i < ring.size(); i++)
+    {
+        if (ring[i] == key[keyIdx])
+        {
+            int steps = 1 + minSteps(ringIdx, i, ring.size());
+            int totalSteps = steps + solve(i, keyIdx + 1, ring, key, memo);
+            result = min(result, totalSteps);
+        }
+    }
+    return memo[ringIdx][keyIdx] = result;
+}
+
+int memoSol(string &ring, string &key)
+{
+    int n = ring.size();
+    int m = key.size();
+    vector<vector<int>> memo(n, vector<int>(m, -1));
+    return solve(0, 0, ring, key, memo);
+}
+
+int main () {
+
+    string ring, key; 
+    cin >> ring >> key; 
+    cout << "The result is: "<<  memoSol(ring, key) << "\n";
+
+    return 0;
+}

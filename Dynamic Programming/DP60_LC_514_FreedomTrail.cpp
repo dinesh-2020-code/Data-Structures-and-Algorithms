@@ -26,6 +26,11 @@
  * it become "ddinggo".Also, we need 1 more step for spelling.
  * So the final output is 4.
  * 
+ * 
+ * Constraints:
+ *      1) 1 <= ring.length, key.length <= 100
+ *      2) ring and key consist of only lower case English letters.
+ *      3) It is guaranteed that key could always be spelled by rotating ring.
 */
 
 #include <iostream>
@@ -64,6 +69,7 @@ int solve(int ringIdx, int keyIdx, string &ring, string &key, vector<vector<int>
     return memo[ringIdx][keyIdx] = result;
 }
 
+
 int memoSol(string &ring, string &key)
 {
     int n = ring.size();
@@ -72,11 +78,47 @@ int memoSol(string &ring, string &key)
     return solve(0, 0, ring, key, memo);
 }
 
+int rotateStepsTab(string &ring, string &key) {
+    int n = ring.size(), m = key.size();
+    //declare a DP table
+    // dp[ringIdx][keyIdx] represents the min no of steps required to print the char at keyIdx
+    // given that ringIdx points to the 12:00 clock.
+    vector<vector<int>> dp (n, vector<int>(m + 1, 0));
+
+    for (int keyIdx = m - 1; keyIdx >= 0; keyIdx--) {
+        // Try for all positions of ring index
+        for (int ringIdx = n - 1; ringIdx >= 0; ringIdx--) {
+
+            int result = INT_MAX;
+            for (int i = 0; i < ring.size(); i++)
+            {
+                if (ring[i] == key[keyIdx])
+                {
+                    int steps = 1 + minSteps(ringIdx, i, ring.size());
+                    int totalSteps = steps + dp[i][keyIdx + 1];
+                    result = min(result, totalSteps);
+                }
+            }
+            dp[ringIdx][keyIdx] = result;
+        }
+    }
+    //printing the dp table
+    // for (int i = 0; i < n; i++) {
+    //     for (int j = 0; j <= m; j++) {
+    //         cout << dp[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+    return dp[0][0];
+}
+
+
 int main () {
 
     string ring, key; 
+    cout << "Enter the values for strings `ring` and `key` separated by spaces below\n";
     cin >> ring >> key; 
     cout << "The result is: "<<  memoSol(ring, key) << "\n";
-
+    cout << "The result is: " << rotateStepsTab(ring, key) << "\n";
     return 0;
 }
